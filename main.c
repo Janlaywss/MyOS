@@ -15,14 +15,14 @@
 #include<stdio.h>
 void HariMain()
 {	
-	//ÖĞ¶Ï³õÊ¼»¯ 
+	//ä¸­æ–­åˆå§‹åŒ– 
 	init_gdtidt();
 	init_pic();
 	io_sti();
-	io_out8(PIC0_IMR, 0xf8);//ÔÊĞíPICÖĞ¶ÏÓë¼üÅÌÖĞ¶Ï
-	io_out8(PIC1_IMR, 0xef);//ÔÊĞíÊó±êÖĞ¶Ï
+	io_out8(PIC0_IMR, 0xf8);//å…è®¸PICä¸­æ–­ä¸é”®ç›˜ä¸­æ–­
+	io_out8(PIC1_IMR, 0xef);//å…è®¸é¼ æ ‡ä¸­æ–­
 	
-	//³õÊ¼»¯Êó±ê¡¢¼üÅÌ¡¢¶¨Ê±Æ÷»º³åÇø£¨Ö÷ÈÎÎñ¼üÊó»º³åÇø¶¨ÒåÔÚÕ»ÖĞ£¬×ÓÈÎÎñ»º³å¶¨ÒåÔÚ¶ÑÖĞ£© 
+	//åˆå§‹åŒ–é¼ æ ‡ã€é”®ç›˜ã€å®šæ—¶å™¨ç¼“å†²åŒºï¼ˆä¸»ä»»åŠ¡é”®é¼ ç¼“å†²åŒºå®šä¹‰åœ¨æ ˆä¸­ï¼Œå­ä»»åŠ¡ç¼“å†²å®šä¹‰åœ¨å †ä¸­ï¼‰ 
 	unsigned char data;
 	unsigned char keyb[32],mouseb[1024],timeb[8];
 	struct Buffer timeBuffer;
@@ -30,38 +30,38 @@ void HariMain()
 	initBuffer(&allBuf.mouse,1024,mouseb);
 	initBuffer(&timeBuffer,8,timeb);
 	
-	//¶¨Ê±Æ÷³õÊ¼»¯
+	//å®šæ—¶å™¨åˆå§‹åŒ–
 	initPit();
-	//Éè¶¨¶¨Ê±Æ÷ 
-	struct Timer *timer1;//timer1Îª¹â±êÉÁË¸¶¨Ê±Æ÷,timer2Îªµ¹¼ÆÊ±¶¨Ê±Æ÷ 
+	//è®¾å®šå®šæ—¶å™¨ 
+	struct Timer *timer1;//timer1ä¸ºå…‰æ ‡é—ªçƒå®šæ—¶å™¨,timer2ä¸ºå€’è®¡æ—¶å®šæ—¶å™¨ 
 	timer1=allocTimer();
 	initTimer(timer1,&timeBuffer,10);
 	setTimer(timer1,50);
 	
-	//³õÊ¼»¯ÆÁÄ» 
-	struct BootInfo *binfo=(struct BootInfo *) BOOTADDR;//ÆÁÄ»³¤¿í£¬Í¼Ïñ»º³åÇøÆğÊ¼Î»ÖÃ
-	initPalette();//Éè¶¨µ÷É«°å 
+	//åˆå§‹åŒ–å±å¹• 
+	struct BootInfo *binfo=(struct BootInfo *) BOOTADDR;//å±å¹•é•¿å®½ï¼Œå›¾åƒç¼“å†²åŒºèµ·å§‹ä½ç½®
+	initPalette();//è®¾å®šè°ƒè‰²æ¿ 
 	putStrOnSrn(binfo,0,20,LIGHTRED,"Welcome To my OS");
 	putStrOnSrn(binfo,0,50,LIGHTRED,"Check the memory now...");
 	
-	//Êó±ê->Êó±ê¿ØÖÆµçÂ·->CPU
-	//ÏÈ³õÊ¼»¯Êó±ê¿ØÖÆµçÂ·£¨Òş²ØÔÚ¼üÅÌ¿ØÖÆµçÂ·Àï£©
-	//ÔÙ¼¤»îÊó±ê
+	//é¼ æ ‡->é¼ æ ‡æ§åˆ¶ç”µè·¯->CPU
+	//å…ˆåˆå§‹åŒ–é¼ æ ‡æ§åˆ¶ç”µè·¯ï¼ˆéšè—åœ¨é”®ç›˜æ§åˆ¶ç”µè·¯é‡Œï¼‰
+	//å†æ¿€æ´»é¼ æ ‡
 	mdec.x=100;
 	mdec.y=100;
-	init_keyboard();//ÏÈ³õÊ¼»¯¼üÅÌ¿ØÖÆµçÂ·
-	enable_mouse(&mdec);//ÔÙ¼¤»îÊó±ê
+	init_keyboard();//å…ˆåˆå§‹åŒ–é”®ç›˜æ§åˆ¶ç”µè·¯
+	enable_mouse(&mdec);//å†æ¿€æ´»é¼ æ ‡
 	
 
 
 	
-	//³õÊ¼»¯ÄÚ´æ
+	//åˆå§‹åŒ–å†…å­˜
 	//struct MemoryList *
 	meml=(struct MemoryList *)MEMORYLISTADDR;
 	int size;
 	initMem();
 	meml->maxsize=0x7fffffff; 
-	size=memtest(0x00400000,0xbfffffff);//ÄÚ´æ²âÊÔ 
+	size=memtest(0x00400000,0xbfffffff);//å†…å­˜æµ‹è¯• 
 	freeMem(0x00001000,0x0009e000);
 	freeMem(0x00400000,size-0x00400000);
 	meml->used[0].addr=0x9e000;
@@ -69,7 +69,7 @@ void HariMain()
 	meml->used[0].flag=1;
 	sprintf (meml->used[0].status,"System");
 	
-	//³õÊ¼»¯¼üÅÌÊı¾İ
+	//åˆå§‹åŒ–é”®ç›˜æ•°æ®
 	char keyTable[0x160]=
 	{
 		 0 , 0 ,'1','2','3','4','5','6','7','8','9','0','-','=', 0 , 0 ,
@@ -94,21 +94,21 @@ void HariMain()
 	char curInput[128];
 	int curPos = 0;
 
-	//³õÊ¼»¯Í¼²ã±í
+	//åˆå§‹åŒ–å›¾å±‚è¡¨
 	scl=initSCL(binfo);
 	sprintf (meml->used[1].status,"Sheet Control");
 
-	//³õÊ¼»¯×ÀÃæÍ¼²ã
+	//åˆå§‹åŒ–æ¡Œé¢å›¾å±‚
 	struct Sheet *sht_back;
 	unsigned char *buf_back;
-	sht_back=allocSheet();//ÉêÇëÍ¼²ã 
-	buf_back=(unsigned char *)allocMem_4k(binfo->scrnx*binfo->scrny,"Background UI");//ÉêÇëÄÚ´æ¿Õ¼ä 
-	setBufInSheet(sht_back,buf_back,binfo->scrnx,binfo->scrny,-1);//³õÊ¼»¯Í¼²ã£¬ÆäÖĞÎŞÍ¸Ã÷É« 
-	initScreenOnSht(sht_back);//»­Í¼²ã
-	slideSheet(sht_back,0,0);//ÒÆ¶¯Í¼²ãÎ»ÖÃ
+	sht_back=allocSheet();//ç”³è¯·å›¾å±‚ 
+	buf_back=(unsigned char *)allocMem_4k(binfo->scrnx*binfo->scrny,"Background UI");//ç”³è¯·å†…å­˜ç©ºé—´ 
+	setBufInSheet(sht_back,buf_back,binfo->scrnx,binfo->scrny,-1);//åˆå§‹åŒ–å›¾å±‚ï¼Œå…¶ä¸­æ— é€æ˜è‰² 
+	initScreenOnSht(sht_back);//ç”»å›¾å±‚
+	slideSheet(sht_back,0,0);//ç§»åŠ¨å›¾å±‚ä½ç½®
 	updownSheet(sht_back,0);
 	
-	//³õÊ¼»¯Êó±êÍ¼²ã
+	//åˆå§‹åŒ–é¼ æ ‡å›¾å±‚
 	struct Sheet *sht_mouse;
 	char mousebuf[256];
 	sht_mouse=allocSheet();
@@ -117,35 +117,35 @@ void HariMain()
 	slideSheet(sht_mouse, mdec.x, mdec.y);
 	updownSheet(sht_mouse,1); 
 	
-	//ÏÔÊ¾»ù±¾ĞÅÏ¢ 
+	//æ˜¾ç¤ºåŸºæœ¬ä¿¡æ¯ 
 	char str[128]; 
-	//ÏÔÊ¾ÄÚ´æ´óĞ¡
+	//æ˜¾ç¤ºå†…å­˜å¤§å°
 	unsigned int u=meml->maxsize/1024/1024;
 	sprintf (str,"Memory: %dM",u);
 	putStrAndBackOnSht(sht_back,0,0,LIGHTRED,LIGHTGRAY,str,-1);
-	//ÏÔÊ¾Focus´°¿Ú
+	//æ˜¾ç¤ºFocusçª—å£
 	sprintf (str,"Fouse: Console");
 	putStrAndBackOnSht(sht_back,0,1*16,LIGHTRED,LIGHTBLUE,str,40);
-	refreshAllSheet();//ËùÓĞÍ¼²ã×¼±¸ 
+	refreshAllSheet();//æ‰€æœ‰å›¾å±‚å‡†å¤‡ 
 	
-	//³õÊ¼»¯¶àÈÎÎñ
+	//åˆå§‹åŒ–å¤šä»»åŠ¡
 	initTaskCTL();
 	
-	//Éè¶¨Ö÷ÈÎÎñ
+	//è®¾å®šä¸»ä»»åŠ¡
 	struct Task *mainTask;
 	mainTask=getMainTask();
 	
-	//³õÊ¼»¯½¹µã£¬¿ªÊ¼½¹µãÎªConsoleÈÎÎñ 
+	//åˆå§‹åŒ–ç„¦ç‚¹ï¼Œå¼€å§‹ç„¦ç‚¹ä¸ºConsoleä»»åŠ¡ 
 	initWindow();
 	
-	//¶¨ÒåConsoleÈÎÎñ
+	//å®šä¹‰Consoleä»»åŠ¡
 	struct Task *consoleTask;
 	consoleTask=allocTask();
 	initTask(consoleTask,(int)&consoleTask_Main,"Console",11);
 	createWindow(consoleTask,"Console");
 	runTask(consoleTask);
 	
-	//¶¨ÒåcalculatorÈÎÎñ
+	//å®šä¹‰calculatorä»»åŠ¡
 	/*struct Task *calculatorTask;
 	calculatorTask=allocTask();
 	window.winCount++;
@@ -155,7 +155,7 @@ void HariMain()
 	
 	int flag;
 	keyboard.isShift=0;
-	//³ÌĞò´óÑ­»· 
+	//ç¨‹åºå¤§å¾ªç¯ 
 	while(1)
 	{
 		flag=0;
@@ -165,48 +165,48 @@ void HariMain()
 			putStrAndBackOnSht(sht_back,0,1*16,LIGHTRED,LIGHTBLUE,str,60);
 			window.isChanged=0;
 		}
-		//¼ì²é¸÷ÀàÖĞ¶Ï 
+		//æ£€æŸ¥å„ç±»ä¸­æ–­ 
 		io_cli();
 		if (getBuffer(&allBuf.key,&data))
 		{
-			//¼üÅÌ 
+			//é”®ç›˜ 
 			io_sti();
 			flag=1;
 			sprintf (str,"Key: %x",data);
-			putStrAndBackOnSht(sht_back,0,2*16,LIGHTRED,LIGHTBLUE,str,26);//ÏÔÊ¾¼üÅÌĞÅÏ¢ 
-			//Ö´ĞĞ¼üÅÌ¶¯×÷ 
+			putStrAndBackOnSht(sht_back,0,2*16,LIGHTRED,LIGHTBLUE,str,26);//æ˜¾ç¤ºé”®ç›˜ä¿¡æ¯ 
+			//æ‰§è¡Œé”®ç›˜åŠ¨ä½œ 
 			switch (data)
 			{
-				case 0x0f://Tab¼ü
+				case 0x0f://Tabé”®
 					window.focus++; 
 					window.focus%=window.winCount;
 					window.isChanged=1;
 					break;
 				case 0x2a:
-				case 0x36://Shift°´×¡ 
+				case 0x36://ShiftæŒ‰ä½ 
 					keyboard.isShift=1;
 					break;
 				case 0xaa:
-					case 0xb6://ShiftËÉ¿ª 
+					case 0xb6://Shiftæ¾å¼€ 
 					keyboard.isShift=0;
 					break;
-				default://Ê£Óà¼üÅÌ¶¯×÷ ´«¸ø×ÓÈÎÎñ 
-					putBuffer(&taskctl->tasks[1+window.focus]->bufAll.key,data);//Ö÷ÈÎÎñÃ»ÓĞ´°¿Ú£¬¹Ê´°¿ÚºÅ+1=ÈÎÎñºÅ 
+				default://å‰©ä½™é”®ç›˜åŠ¨ä½œ ä¼ ç»™å­ä»»åŠ¡ 
+					putBuffer(&taskctl->tasks[1+window.focus]->bufAll.key,data);//ä¸»ä»»åŠ¡æ²¡æœ‰çª—å£ï¼Œæ•…çª—å£å·+1=ä»»åŠ¡å· 
 					break;
 			}
 			/*if (window.focus==0)
 			{
-				if (data<0x80 && keyTable[data]>0 && curPos<=15)//×ÖÄ¸£¬Êı×Ö 
+				if (data<0x80 && keyTable[data]>0 && curPos<=15)//å­—æ¯ï¼Œæ•°å­— 
 				{
 					curInput[curPos++] = keyTable[data];
 					curInput[curPos] = '\0';
 				}else switch (data)
 				{
-					case 0x0e://ÍË¸ñ¼ü 
+					case 0x0e://é€€æ ¼é”® 
 						if (curPos>0)
 							curInput[--curPos] = '\0';
 						break; 
-					case 0x0f://Tab¼ü
+					case 0x0f://Tabé”®
 						window.focus++; 
 						window.focus%=window.winCount;
 						break;
@@ -218,7 +218,7 @@ void HariMain()
 		}
 		if (getBuffer(&allBuf.mouse,&data))
 		{
-			//Êó±ê 
+			//é¼ æ ‡ 
 			io_sti();
 			flag=2;
 			if (mouse_decode(&mdec,data))
@@ -243,11 +243,11 @@ void HariMain()
 				if (mdec.rbtn)
 					sprintf (str,"%sR",str);
 				sprintf (str,"%s (%d,%d)",str,mdec.x,mdec.y);
-				putStrAndBackOnSht(sht_back,0,3*16,LIGHTRED,LIGHTBLUE,str,25);//ÏÔÊ¾Êó±êĞÅÏ¢ 
+				putStrAndBackOnSht(sht_back,0,3*16,LIGHTRED,LIGHTBLUE,str,25);//æ˜¾ç¤ºé¼ æ ‡ä¿¡æ¯ 
 				slideSheet(sht_mouse,mdec.x,mdec.y);
 				
-				//Ê£ÓàÊó±ê¶¯×÷´«¸ø×ÓÈÎÎñ 
-				//Ö÷ÈÎÎñÃ»ÓĞ´°¿Ú£¬¹ÊÍ¼²ãºÅ+1=´°¿ÚºÅ+1=ÈÎÎñºÅ 
+				//å‰©ä½™é¼ æ ‡åŠ¨ä½œä¼ ç»™å­ä»»åŠ¡ 
+				//ä¸»ä»»åŠ¡æ²¡æœ‰çª—å£ï¼Œæ•…å›¾å±‚å·+1=çª—å£å·+1=ä»»åŠ¡å· 
 				if (mdec.lbtn)
 					putBuffer(&taskctl->tasks[window.focus+1]->bufAll.mouse,0);
 				else if (mdec.mbtn)
@@ -259,18 +259,18 @@ void HariMain()
 		}
 		/*if (getBuffer(&timeBuffer,&data))
 		{
-			//¶¨Ê±Æ÷ 
+			//å®šæ—¶å™¨ 
 			io_sti();
 			flag=3;
-			switch (data)//ÎªÁËÇø·Ö²»Í¬µÄ¶¨Ê±Æ÷ 
+			switch (data)//ä¸ºäº†åŒºåˆ†ä¸åŒçš„å®šæ—¶å™¨ 
 			{
-			case 10://timer1ÏÔÊ¾¹â±ê 
+			case 10://timer1æ˜¾ç¤ºå…‰æ ‡ 
 				initTimer(timer1,&timeBuffer,11);
 				boxfillOnSht(sht_window,16+8*curPos,44,8,15,BLACK);
 				refreshSubInSheet(sht_window,16+8*curPos,44,8,15);   
 				setTimer(timer1,50);
 				break;
-			case 11://timer1Òş²Ø¹â±ê 
+			case 11://timer1éšè—å…‰æ ‡ 
 				initTimer(timer1,&timeBuffer,10);
 				boxfillOnSht(sht_window,16+8*curPos,44,8,15,WHITE);
 				refreshSubInSheet(sht_window,16+8*curPos,44,8,15);
@@ -280,7 +280,7 @@ void HariMain()
 		}*/
 		if (flag==0)
 		{
-			//Ã»ÓĞÊÂ¼ş¾ÍĞİÃß 
+			//æ²¡æœ‰äº‹ä»¶å°±ä¼‘çœ  
 			//sleepTask(mainTask);
 			io_sti();
 		}
@@ -290,26 +290,26 @@ void HariMain()
 
 
 /* 
-//ÈÎÎñcalculator 
+//ä»»åŠ¡calculator 
 void calculatorTask_Main(struct Task *task)
 {
-	//³õÊ¼»¯»º³åÇø 
+	//åˆå§‹åŒ–ç¼“å†²åŒº 
 	char bufferArray[128];
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,128,bufferArray);
 
-	//³õÊ¼»¯¶¨Ê±Æ÷ 
+	//åˆå§‹åŒ–å®šæ—¶å™¨ 
 	struct Timer *timerCur;
 	timerCur=allocTimer();
 	initTimer(timerCur,&bufferTime,1);
 	setTimer(timerCur,50);
 	
-	//³õÊ¼»¯¿ØÖÆÌ¨Í¼²ã
+	//åˆå§‹åŒ–æ§åˆ¶å°å›¾å±‚
 	struct Sheet *consoleSheet;
 	unsigned char *consoleBuffer;	
 	consoleBuffer=(unsigned char *)allocMem_4k(512*310);
 	consoleSheet=allocSheet();
-	setBufInSheet(consoleSheet,consoleBuffer,512,310,-1);//Ã»ÓĞÍ¸Ã÷É«
+	setBufInSheet(consoleSheet,consoleBuffer,512,310,-1);//æ²¡æœ‰é€æ˜è‰²
 	slideSheet(consoleSheet,202,8);
 	makeWindow(consoleSheet,512,310,"Calculator");
 	makeTextBox(consoleSheet,8,27,496,276,BLACK);
@@ -321,12 +321,12 @@ void calculatorTask_Main(struct Task *task)
 	while (1)
 	{
 		flag=0;
-		if (window.focus!=task->winID)//½¹µã²»ÔÚ£¬È¡Ïû¹â±ê 
+		if (window.focus!=task->winID)//ç„¦ç‚¹ä¸åœ¨ï¼Œå–æ¶ˆå…‰æ ‡ 
 		{
 			boxfillOnSht(consoleSheet,8+8*curPos,28,8,15,BLACK);
 			refreshSubInSheet(consoleSheet,8+8*curPos,28,8,15); 
 			continue;
-		}else if (timerCur->flag==TIMER_ALLOCED)//ÖØĞÂ»ñµÃ½¹µã£¬ÖØÆô¹â±ê 
+		}else if (timerCur->flag==TIMER_ALLOCED)//é‡æ–°è·å¾—ç„¦ç‚¹ï¼Œé‡å¯å…‰æ ‡ 
 		{
 			initTimer(timerCur,&bufferTime,1);
 			setTimer(timerCur,50);

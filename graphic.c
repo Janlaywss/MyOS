@@ -39,7 +39,7 @@ void putStrAndBackOnSht(struct Sheet *sht,int x,int y,int color,int backcolor,ch
 }
 void initMouseCursor(struct Sheet *sht)
 {
-	// Û±Í◊¯±ÍÕº
+	//Èº†Ê†áÂùêÊ†áÂõæ
 	static char cursor[18][17] = {
 		"****************",
 		"****************",
@@ -60,7 +60,7 @@ void initMouseCursor(struct Sheet *sht)
 		"............*OO*",
 		".............***"
 	};
-	//¥À¥¶Œﬁ∑®¿ÌΩ‚£¨«∞¡Ω≤„Œ™∫ŒŒﬁ∑®œ‘ æ£¨π Ã¯π˝
+	//Ê≠§Â§ÑÊó†Ê≥ïÁêÜËß£ÔºåÂâç‰∏§Â±Ç‰∏∫‰ΩïÊó†Ê≥ïÊòæÁ§∫ÔºåÊïÖË∑≥Ëøá
 	for(int i=0;i<16;i++)
 		for (int j=0;j<16;j++)
 			switch(cursor[i+2][j])
@@ -88,22 +88,22 @@ void initPalette()
 {	
 	static unsigned char table_rgb[16][3] = 
 	{
-		{0x00, 0x00, 0x00},	//∫⁄
-		{0xff, 0x00, 0x00},	//¡¡∫Ï
-		{0x00, 0xff, 0x00},	//¡¡¬Ã
-		{0xff, 0xff, 0x00},	//¡¡ª∆
-		{0x00, 0x00, 0xff},	//¡¡¿∂
-		{0xff, 0x00, 0xff},	//¡¡◊œ
-		{0x00, 0xff, 0xff},	//«≥¡¡¿∂
-		{0xff, 0xff, 0xff},	//∞◊
-		{0xc6, 0xc6, 0xc6},	//¡¡ª“
-		{0x84, 0x00, 0x00},	//∞µ∫Ï
-		{0x00, 0x84, 0x00},	//∞µ¬Ã
-		{0x84, 0x84, 0x00},	//∞µª∆
-		{0x00, 0x00, 0x84},	//∞µ«‡
-		{0x84, 0x00, 0x84},	//∞µ◊œ
-		{0x00, 0x84, 0x84},	//«≥∞µ¿∂
-		{0x84, 0x84, 0x84}	//∞µª“
+		{0x00, 0x00, 0x00},	//Èªë
+		{0xff, 0x00, 0x00},	//‰∫ÆÁ∫¢
+		{0x00, 0xff, 0x00},	//‰∫ÆÁªø
+		{0xff, 0xff, 0x00},	//‰∫ÆÈªÑ
+		{0x00, 0x00, 0xff},	//‰∫ÆËìù
+		{0xff, 0x00, 0xff},	//‰∫ÆÁ¥´
+		{0x00, 0xff, 0xff},	//ÊµÖ‰∫ÆËìù
+		{0xff, 0xff, 0xff},	//ÁôΩ
+		{0xc6, 0xc6, 0xc6},	//‰∫ÆÁÅ∞
+		{0x84, 0x00, 0x00},	//ÊöóÁ∫¢
+		{0x00, 0x84, 0x00},	//ÊöóÁªø
+		{0x84, 0x84, 0x00},	//ÊöóÈªÑ
+		{0x00, 0x00, 0x84},	//ÊöóÈùí
+		{0x84, 0x00, 0x84},	//ÊöóÁ¥´
+		{0x00, 0x84, 0x84},	//ÊµÖÊöóËìù
+		{0x84, 0x84, 0x84}	//ÊöóÁÅ∞
 	};
 	setPalette(0, 15, table_rgb);
 	return;
@@ -114,12 +114,12 @@ void setPalette(int start,int end,unsigned char rgb[16][3])
 	int i,eflags;
 	eflags=io_load_eflags();
 	io_cli();
-	io_out8(0x03c8,start);//¥”0∫≈µ˜…´∞Âø™ º…Ë∂®
+	io_out8(0x03c8,start);//‰ªé0Âè∑Ë∞ÉËâ≤ÊùøÂºÄÂßãËÆæÂÆö
 	
 	for (i=start;i<=end;i++)
 	{
-		//∞¥RGB–¥»Î£¨µ˜…´∞Â∫≈¬Î◊‘∂Ø∫Û“∆
-		io_out8(0x03c9,rgb[i][0]/4);//≥˝4 «Œ™¡À∏ƒ±‰…Ó«≥
+		//ÊåâRGBÂÜôÂÖ•ÔºåË∞ÉËâ≤ÊùøÂè∑Á†ÅËá™Âä®ÂêéÁßª
+		io_out8(0x03c9,rgb[i][0]/4);//Èô§4ÊòØ‰∏∫‰∫ÜÊîπÂèòÊ∑±ÊµÖ
 		io_out8(0x03c9,rgb[i][1]/4);
 		io_out8(0x03c9,rgb[i][2]/4);
 	}
@@ -134,7 +134,7 @@ void initScreenOnSht(struct Sheet *sht)
 	int x=sht->xsize; 
 	int y=sht->ysize;
 	
-	//ª≠»ŒŒÒøÚ
+	//Áîª‰ªªÂä°Ê°Ü
 	boxfillOnSht(sht,0,0,x,y-28,LIGHTBLUE);
 	boxfillOnSht(sht,0,y-28,x,1,LIGHTGRAY);
 	boxfillOnSht(sht,0,y-27,x,1,LIGHTGRAY);
@@ -204,9 +204,9 @@ void makeWindow(struct Sheet *sht,int xsize,int ysize,char *title)
 	boxfillOnSht(sht, xsize - 2, 1,         1,		 	ysize - 2, 	DULLGRAY);
 	boxfillOnSht(sht, xsize - 1, 0,         1, 			ysize, 		BLACK);
 	//if (title[11]=='2'){struct BootInfo *binfo=(struct BootInfo *) 0x00000ff0;char s[128];sprintf (s,"b21");putStrOnSrn(binfo,0,320,1,s);}
-	boxfillOnSht(sht, 2,         2,         xsize - 4, 	ysize - 4, 	WHITE);//£° 
+	boxfillOnSht(sht, 2,         2,         xsize - 4, 	ysize - 4, 	WHITE);//ÔºÅ 
 	//if (title[11]=='2'){struct BootInfo *binfo=(struct BootInfo *) 0x00000ff0;char s[128];sprintf (s,"b22");putStrOnSrn(binfo,0,340,1,s);}
-	boxfillOnSht(sht, 3,         3,         xsize - 6, 	18, 		DULLINDIGO);//£° 
+	boxfillOnSht(sht, 3,         3,         xsize - 6, 	18, 		DULLINDIGO);//ÔºÅ 
 	//if (title[11]=='2'){struct BootInfo *binfo=(struct BootInfo *) 0x00000ff0;char s[128];sprintf (s,"b27");putStrOnSrn(binfo,0,360,1,s);}
 	boxfillOnSht(sht, 1,         ysize - 2, xsize - 2, 	1, 			DULLGRAY);
 	//if (title[11]=='2'){struct BootInfo *binfo=(struct BootInfo *) 0x00000ff0;char s[128];sprintf (s,"b29");putStrOnSrn(binfo,0,380,1,s);}
