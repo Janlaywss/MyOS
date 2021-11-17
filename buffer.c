@@ -14,7 +14,7 @@ void initBuffer(struct Buffer *buffer,int bufferSize,unsigned char *tmp)
 }
 int putBuffer(struct Buffer *buffer,unsigned char data)
 {
-	//Ğ´ÈëÊı¾İ 
+	//å†™å…¥æ•°æ® 
 	if (buffer->free==0)
 	{
 		buffer->flag=1;
@@ -25,7 +25,7 @@ int putBuffer(struct Buffer *buffer,unsigned char data)
 	buffer->r%=buffer->bufferSize;
 	buffer->free--;
 	
-	//»½ĞÑÈÎÎñ 
+	//å”¤é†’ä»»åŠ¡ 
 	/*if (buffer->task!=0)
 		if (buffer->task->flags!=TASK_USING)
 			runTask(buffer->task);*/

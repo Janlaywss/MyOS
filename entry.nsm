@@ -1,24 +1,24 @@
 ; haribote-os boot asm
 ; TAB=4
 
-VBEMODE	EQU		0x105		;����ģʽ 
-BOTPAK EQU 0x00280000		; mainҪ���õ�λ��
-DSKCAC EQU 0x00100000		; ������Ҫ���õ�λ��
-DSKCAC0	EQU 0x00008000		; ����ʣ�ಿ��Ҫ���õ�λ��
+VBEMODE	EQU		0x105		;画面模式 
+BOTPAK EQU 0x00280000		; main要放置的位置
+DSKCAC EQU 0x00100000		; 启动区要放置的位置
+DSKCAC0	EQU 0x00008000		; 磁盘剩余部分要放置的位置
 
-;��ȡ������Ϣ
+;获取引导信息
 
-;ͼ����Ϣ��λ�� 0x0ff0 ~0x0ff8
-CYLS EQU 0x0ff0				;��λ��(��IPL.nsm�н�װ������Ľ���λ��д����0x0ff8��)
-LEDS EQU 0x0ff1				;LED��
-VMODE EQU 0x0ff2			;ɫλ��
-SCRNX EQU 0x0ff4			;�ֱ���(x,y)
+;图像信息的位置 0x0ff0 ~0x0ff8
+CYLS EQU 0x0ff0				;定位区(在IPL.nsm中将装在区域的结束位置写入了0x0ff8中)
+LEDS EQU 0x0ff1				;LED灯
+VMODE EQU 0x0ff2			;色位数
+SCRNX EQU 0x0ff4			;分辨率(x,y)
 SCRNY EQU 0x0ff6	
-VRAM EQU 0x0ff8				;ͼ�񻺳���(������Ļ���ݵĵط���ʼʼ��λ��
+VRAM EQU 0x0ff8				;图像缓冲区(保存屏幕内容的地方起始始的位置
 	
 ORG 0xc200	
 
-;ȷ��VBE����
+;确认VBE存在
 MOV AX,0x9000
 MOV ES,AX
 MOV DI,0
@@ -27,19 +27,19 @@ INT 0x10
 CMP AX,0x004f
 JNE scrn320
 
-;�鿴VBE�汾 
+;查看VBE版本 
 MOV AX,[ES:DI+4] 
 CMP AX,0x0200
 JB scrn320
 
-;��ȡ������Ϣ
+;获取画面信息
 MOV	CX,VBEMODE
 MOV	AX,0x4f01
 INT 0x10
 CMP	AX,0x004f
 JNE	scrn320
 
-;ȷ�ϻ�����Ϣ
+;确认画面信息
 CMP BYTE [ES:DI+0x19],8
 JNE scrn320
 CMP BYTE [ES: DI+0x1b],4
@@ -48,7 +48,7 @@ MOV AX,[ES:DI+0x00]
 AND AX,0x0080
 JZ scrn320
 
-;�л�����ģʽ
+;切换画面模式
 MOV	BX,VBEMODE+0x4000
 MOV	AX,0x4f02
 INT	0x10
@@ -61,7 +61,7 @@ MOV	EAX,[ES:DI+0x28]
 MOV	[VRAM],EAX
 JMP	keystatus 
 
-;�л�ʧ�ܣ��ص�320*200ģʽ
+;切换失败，回到320*200模式
 scrn320:
 MOV	AL,0x13			
 MOV	AH,0x00
@@ -72,80 +72,80 @@ MOV	WORD [SCRNY],200
 MOV	DWORD [VRAM],0x000a0000
 
 keystatus:
-;��ȡLED�Ƶ���Ϣ
+;获取LED灯的信息
 MOV AH,0x02
 INT 0x16
 MOV [LEDS],AL
 
 
-MOV	AL,0xff				;��ֹ��PIC��ȫ���ж�
+MOV	AL,0xff				;禁止主PIC的全部中断
 OUT	0x21,AL
-NOP						;����OUT���ܵ����޷�����
-OUT	0xa1,AL				;��ֹ��PIC��ȫ���ж�
+NOP						;连续OUT可能导致无法运行
+OUT	0xa1,AL				;禁止从PIC的全部中断
 
-CLI						;��ֹCPU������ж�
+CLI						;禁止CPU级别的中断
 
-; �趨A20GATE��Ϊ��ʹCPU�ܷ���1MB�����ڴ�
+; 设定A20GATE，为了使CPU能访问1MB以上内存
 CALL waitkbdout
 MOV AL,0xd1
 OUT	0x64,AL
 CALL waitkbdout
-MOV AL,0xdf				;�����˿����0xdf
+MOV AL,0xdf				;向附属端口输出0xdf
 OUT	0x60,AL
 CALL waitkbdout
 
-; �л�������ģʽ
+; 切换到保护模式
 
 ;[INSTRSET "i486p"]				
 
-LGDT [GDTR0]			; �趨��ʱGDT
-MOV	EAX,CR0				;CR0�Ĵ���������ļĴ���
-AND	EAX,0x7fffffff		; ���λ��0
-OR EAX,0x00000001		; ���λ��1
+LGDT [GDTR0]			; 设定临时GDT
+MOV	EAX,CR0				;CR0寄存器，特殊的寄存器
+AND	EAX,0x7fffffff		; 最高位置0
+OR EAX,0x00000001		; 最低位置1
 MOV	CR0,EAX
 JMP	pipelineflush
 
 pipelineflush:
-MOV	AX,1*8				; ���мĴ��������0x0008
+MOV	AX,1*8				; 所有寄存器都变成0x0008
 MOV	DS,AX
 MOV	ES,AX
 MOV	FS,AX
 MOV	GS,AX
 MOV	SS,AX
 
-; ����main.hrb
-MOV	ESI,main		;Դ
-MOV	EDI,BOTPAK			;Ŀ��
-MOV	ECX,512*1024/4		;�������ݴ�С����λ˫�֣�
-CALL memcpy				;���ͺ�����ע����CALL����JMP��
+; 传送main.hrb
+MOV	ESI,main		;源
+MOV	EDI,BOTPAK			;目的
+MOV	ECX,512*1024/4		;传送数据大小（单位双字）
+CALL memcpy				;传送函数（注意是CALL而非JMP）
 
 
-; ����������
-MOV	ESI,0x7c00			;Դ
-MOV	EDI,DSKCAC			;Ŀ��
+; 传送启动区
+MOV	ESI,0x7c00			;源
+MOV	EDI,DSKCAC			;目的
 MOV	ECX,512/4
 CALL memcpy
 
-;����ʣ���������(10������*������ͷ*18������)
-MOV	ESI,DSKCAC0+512		;Դ
-MOV	EDI,DSKCAC+512		;Ŀ��
+;传送剩余磁盘内容(10个柱面*两个磁头*18个扇区)
+MOV	ESI,DSKCAC0+512		;源
+MOV	EDI,DSKCAC+512		;目的
 MOV	ECX,0
 MOV	CL,BYTE [CYLS]
 IMUL ECX,512*18*2/4	
-SUB	ECX,512/4			;cyls*512*18*2/4-512/4(��ȥ������)
+SUB	ECX,512/4			;cyls*512*18*2/4-512/4(除去引导区)
 CALL memcpy
 
 
 
-; main�����������û������
+; main的启动（这段没看懂）
 MOV	EBX,BOTPAK
 MOV	ECX,[EBX+16]
 ADD	ECX,3				; ECX += 3;
 SHR	ECX,2				; ECX /= 4;
 JZ	skip				;Jmup if zero
-MOV	ESI,[EBX+20]		; Դ
+MOV	ESI,[EBX+20]		; 源
 ADD	ESI,EBX
-MOV	EDI,[EBX+12]		; Ŀ��
+MOV	EDI,[EBX+12]		; 目的
 CALL memcpy
 
 skip:
@@ -158,7 +158,7 @@ AND	 AL,0x02
 JNZ waitkbdout	
 RET
 
-;���ڴ���и�ֵ��Դ��ַΪESI��Ŀ�ĵ�ַΪEDI�����ݳ���ΪECX
+;将内存进行赋值，源地址为ESI，目的地址为EDI，数据长度为ECX
 memcpy:
 MOV	EAX,[ESI]
 ADD	ESI,4
@@ -168,7 +168,7 @@ SUB	ECX,1
 JNZ	memcpy			
 RET
 
-;�����ַʹGTD�ܰ�16λ���룬����̫��
+;填入地址使GTD能按16位对齐，看不太懂
 ALIGNB	16
 GDT0:
 RESB 8				

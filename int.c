@@ -5,50 +5,50 @@
 #include"mtask.h"
 #include<stdio.h>
 /*
-PICÊÇ¿É±à³ÌÖĞ¶Ï¿ØÖÆÆ÷ ÓĞÁ½¸öPIC£¨Ö÷£¬´Ó£©Ã¿¸öPICÓĞ8Â·IRQ£¨ÖĞ¶ÏÇëÇó£© 
-IMR ÖĞ¶ÏÆÁ±ÎÆ÷£¬8Î»¶ÔÓ¦8¸öIRQĞÅºÅ ÊÇPICµÄ¼Ä´æÆ÷ 
-io_out8Ïò¶ÔÓ¦¶Ë¿ÚĞ´Êı¾İ 
+PICæ˜¯å¯ç¼–ç¨‹ä¸­æ–­æ§åˆ¶å™¨ æœ‰ä¸¤ä¸ªPICï¼ˆä¸»ï¼Œä»ï¼‰æ¯ä¸ªPICæœ‰8è·¯IRQï¼ˆä¸­æ–­è¯·æ±‚ï¼‰ 
+IMR ä¸­æ–­å±è”½å™¨ï¼Œ8ä½å¯¹åº”8ä¸ªIRQä¿¡å· æ˜¯PICçš„å¯„å­˜å™¨ 
+io_out8å‘å¯¹åº”ç«¯å£å†™æ•°æ® 
 */
 void init_pic(void)
 {
-	//½ûÖ¹ËùÓĞÖĞ¶Ï 
+	//ç¦æ­¢æ‰€æœ‰ä¸­æ–­ 
 	io_out8(PIC0_IMR,0xff);	
 	io_out8(PIC1_IMR,0xff);
 	
-	//ÉèÖÃÖ÷PIC 
-	//ICWÓĞ4¸ö2×Ö½Ú ICW1ÓëICW4 ÎªÖ÷°åÌØĞÔ£¬¹Ì¶¨Öµ
-	//ICW2¾ö¶¨IRQÓÃÄÄÒ»ÖÖÖĞ¶ÏÍ¨ÖªCPU 
-	//ICW3ÊÇÖ÷´ÓPICÁ¬½ÓÉè¶¨ 0x00000100  ´ÓPICÁ¬½Óµ½Ö÷PICµÄIRQ2ÉÏ ¹Ì¶¨Öµ 
-	io_out8(PIC0_ICW1,0x11); //±ßÑØ´¥·¢Ä£Ê½
-	io_out8(PIC0_ICW2,0x20); //IRQ0-7ÓÉINT20-27½ÓÊÕ
-	io_out8(PIC0_ICW3,1<<2); //´ÓPICÓÉIRQ2Á¬½Ó 
-	io_out8(PIC0_ICW4,0x01); //ÎŞ»º³åÇøÄ£Ê½
+	//è®¾ç½®ä¸»PIC 
+	//ICWæœ‰4ä¸ª2å­—èŠ‚ ICW1ä¸ICW4 ä¸ºä¸»æ¿ç‰¹æ€§ï¼Œå›ºå®šå€¼
+	//ICW2å†³å®šIRQç”¨å“ªä¸€ç§ä¸­æ–­é€šçŸ¥CPU 
+	//ICW3æ˜¯ä¸»ä»PICè¿æ¥è®¾å®š 0x00000100  ä»PICè¿æ¥åˆ°ä¸»PICçš„IRQ2ä¸Š å›ºå®šå€¼ 
+	io_out8(PIC0_ICW1,0x11); //è¾¹æ²¿è§¦å‘æ¨¡å¼
+	io_out8(PIC0_ICW2,0x20); //IRQ0-7ç”±INT20-27æ¥æ”¶
+	io_out8(PIC0_ICW3,1<<2); //ä»PICç”±IRQ2è¿æ¥ 
+	io_out8(PIC0_ICW4,0x01); //æ— ç¼“å†²åŒºæ¨¡å¼
 	
-	//ÉèÖÃ´ÓPIC 
-	io_out8(PIC1_ICW1,0x11); //±ßÑØ´¥·¢Ä£Ê½
-	io_out8(PIC1_ICW2,0x28); //IRQ8-15ÓÉINT28-2f½ÓÊÕ
-	io_out8(PIC1_ICW3,2); 	 //´ÓPICÓÉIRQ2Á¬½Ó 
-	io_out8(PIC1_ICW4,0x01); //ÎŞ»º³åÇøÄ£Ê½
+	//è®¾ç½®ä»PIC 
+	io_out8(PIC1_ICW1,0x11); //è¾¹æ²¿è§¦å‘æ¨¡å¼
+	io_out8(PIC1_ICW2,0x28); //IRQ8-15ç”±INT28-2fæ¥æ”¶
+	io_out8(PIC1_ICW3,2); 	 //ä»PICç”±IRQ2è¿æ¥ 
+	io_out8(PIC1_ICW4,0x01); //æ— ç¼“å†²åŒºæ¨¡å¼
 	
-	io_out8(PIC0_IMR,0xfb);	//11111011 PIC1ÒÔÍâ È«²¿½ûÖ¹ 
-	io_out8(PIC1_IMR,0xff);	//11111111 ½ûÖ¹ËùÓĞÖĞ¶Ï
+	io_out8(PIC0_IMR,0xfb);	//11111011 PIC1ä»¥å¤– å…¨éƒ¨ç¦æ­¢ 
+	io_out8(PIC1_IMR,0xff);	//11111111 ç¦æ­¢æ‰€æœ‰ä¸­æ–­
 	return; 	 
 }
 
-//¶¨Ê±Æ÷ÖĞ¶Ï´¦Àí³ÌĞò 
+//å®šæ—¶å™¨ä¸­æ–­å¤„ç†ç¨‹åº 
 void inthandler20(int *esp)
 {
 	int i;			
-	char ts=0;//ÈÎÎñÇĞ»»µÄ±êÖ¾ 
-	//Í¨ÖªPICÖĞ¶ÏÒÑ¾­½ÓÊÜ 
-	//¶¨Ê±Æ÷ÖĞ¶ÏÊÇIRQ0
+	char ts=0;//ä»»åŠ¡åˆ‡æ¢çš„æ ‡å¿— 
+	//é€šçŸ¥PICä¸­æ–­å·²ç»æ¥å— 
+	//å®šæ—¶å™¨ä¸­æ–­æ˜¯IRQ0
 	io_out8(PIC0_OCW2,0x60);
 	timerctl.count++;
-	//Î´µ½ÏÂÒ»´Î³¬Ê±µÄÊ±¼ä 
+	//æœªåˆ°ä¸‹ä¸€æ¬¡è¶…æ—¶çš„æ—¶é—´ 
 	if (timerctl.next>timerctl.count)
 		return;
 	timerctl.next=TIME_MAX;
-	//µ½ÁË³¬Ê±Ê±¼ä£¬ËùÓĞ³¬Ê±¼ÆÊ±Æ÷Ğ´»º´æ£¬Î´³¬Ê±ÖĞÊ£ÓàÊ±¼ä×î¶ÌµÄÎªÏÂÒ»´Î³¬Ê±Ê±¼ä 
+	//åˆ°äº†è¶…æ—¶æ—¶é—´ï¼Œæ‰€æœ‰è¶…æ—¶è®¡æ—¶å™¨å†™ç¼“å­˜ï¼Œæœªè¶…æ—¶ä¸­å‰©ä½™æ—¶é—´æœ€çŸ­çš„ä¸ºä¸‹ä¸€æ¬¡è¶…æ—¶æ—¶é—´ 
 	for (i=0;i<TIMER_MAX;i++) 
 	{
 		if (timerctl.timer[i].flag==TIMER_USING)
@@ -56,10 +56,10 @@ void inthandler20(int *esp)
 			if (timerctl.count>=timerctl.timer[i].timeout) 
 			{
 				timerctl.timer[i].flag=TIMER_ALLOCED;
-				//ÈÎÎñÇĞ»»µÄ³ÌĞò 
-				if (taskTimer==&timerctl.timer[i])//ÈÎÎñÇĞ»»¶¨Ê±Æ÷ 
+				//ä»»åŠ¡åˆ‡æ¢çš„ç¨‹åº 
+				if (taskTimer==&timerctl.timer[i])//ä»»åŠ¡åˆ‡æ¢å®šæ—¶å™¨ 
 					ts=1; 
-				else putBuffer(timerctl.timer[i].timeoutBuffer,timerctl.timer[i].timeoutData);//ÆäËû¶¨Ê±Æ÷ 
+				else putBuffer(timerctl.timer[i].timeoutBuffer,timerctl.timer[i].timeoutData);//å…¶ä»–å®šæ—¶å™¨ 
 			}else if (timerctl.timer[i].timeout<timerctl.next)
 					timerctl.next=timerctl.timer[i].timeout;
 		}
@@ -68,27 +68,27 @@ void inthandler20(int *esp)
 	}
 	return;
 } 
-//¼üÅÌÖĞ¶Ï´¦Àí³ÌĞò 
+//é”®ç›˜ä¸­æ–­å¤„ç†ç¨‹åº 
 void inthandler21(int *esp)
 {
-	//Í¨ÖªPICÖĞ¶ÏÒÑ¾­½ÓÊÜ 
-	//¼üÅÌÖĞ¶ÏÊÇIRQ1£¬ÏòPIC0·¢ËÍ0x(1+60)¼´¿É
+	//é€šçŸ¥PICä¸­æ–­å·²ç»æ¥å— 
+	//é”®ç›˜ä¸­æ–­æ˜¯IRQ1ï¼Œå‘PIC0å‘é€0x(1+60)å³å¯
 	io_out8(PIC0_OCW2,0x61);
 	unsigned char data=io_in8(PORT_KEYDAT);
 	putBuffer(&allBuf.key,data);
 	return;
 }
-//²»Ã÷°×ÊÇ¸ÉÉ¶µÄ
+//ä¸æ˜ç™½æ˜¯å¹²å•¥çš„
 void inthandler27(int *esp)
 {
 	io_out8(PIC0_OCW2, 0x67);
 	return;
 }
 
-//Êó±êÖĞ¶Ï´¦Àí³ÌĞò 
+//é¼ æ ‡ä¸­æ–­å¤„ç†ç¨‹åº 
 void inthandler2c(int *esp)
 {
-	//Êó±êÖĞ¶ÏÊÇIRQ12£¬ÏòIRQ0·¢ËÍ2£¬Ò²ÒªÏòIRQ1·¢ËÍ4£¨´ÓPICµÄµÚ5¸öÖĞ¶Ï£©
+	//é¼ æ ‡ä¸­æ–­æ˜¯IRQ12ï¼Œå‘IRQ0å‘é€2ï¼Œä¹Ÿè¦å‘IRQ1å‘é€4ï¼ˆä»PICçš„ç¬¬5ä¸ªä¸­æ–­ï¼‰
 	io_out8(PIC1_OCW2,0x64);
 	io_out8(PIC0_OCW2,0x62);
 	unsigned char data=io_in8(PORT_KEYDAT);
