@@ -143,22 +143,22 @@ void loadTextFile (char *fileName,struct Sheet *textViewerSheet,int* curPosX,int
 
 void textViewerTask_Main(struct Task *task)
 {
-	//³õÊ¼»¯»º³åÇø 
+	//åˆå§‹åŒ–ç¼“å†²åŒº 
 	char bufferArray[128];
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,128,bufferArray);
 
-	//³õÊ¼»¯¶¨Ê±Æ÷ 
+	//åˆå§‹åŒ–å®šæ—¶å™¨ 
 	struct Timer *timerCur;
 	timerCur=allocTimer();
 	initTimer(timerCur,&bufferTime,1);
 	setTimer(timerCur,50);
 
-	//ÏÔÊ¾´°¿Ú
+	//æ˜¾ç¤ºçª—å£
 	struct Sheet *textViewerSheet;
 	unsigned char *textViewerBuffer;
 	textViewerSheet=allocSheet();
-	textViewerBuffer=(unsigned char *)allocMem_4k(650*400,"Text Viewer UI");//ÉêÇëÄÚ´æ¿Õ¼ä 
+	textViewerBuffer=(unsigned char *)allocMem_4k(650*400,"Text Viewer UI");//ç”³è¯·å†…å­˜ç©ºé—´ 
 	setBufInSheet(textViewerSheet,textViewerBuffer,650,400,-1);
 	char str[128];
 	sprintf (str,"Text Viewer: %s",task->par[0]);
@@ -166,12 +166,12 @@ void textViewerTask_Main(struct Task *task)
 	slideSheet(textViewerSheet,180,72);
 	updownSheet(textViewerSheet,task->winID+1);
 	
-	//ÊäÈëµÄĞÅÏ¢ 
+	//è¾“å…¥çš„ä¿¡æ¯ 
 	char curInput[21][75];
-	int curPosX=0,curPosY=0,lengthX=0,lengthY=0;//¹â±ê 
+	int curPosX=0,curPosY=0,lengthX=0,lengthY=0;//å…‰æ ‡ 
 	unsigned char data;
 	int page=0;
-	//struct Command command;//ÃüÁî 
+	//struct Command command;//å‘½ä»¤ 
 	int flag=0,f1=0;
 	
 	for (int i=0;i<21;i++)
@@ -181,7 +181,7 @@ void textViewerTask_Main(struct Task *task)
 	while (1)
 	{
 		flag=0; 
-		if (window.focus!=task->winID)//½¹µã²»ÔÚ£¬È¡Ïû¹â±ê 
+		if (window.focus!=task->winID)//ç„¦ç‚¹ä¸åœ¨ï¼Œå–æ¶ˆå…‰æ ‡ 
 		{
 			if (f1==0)
 			{
@@ -190,22 +190,22 @@ void textViewerTask_Main(struct Task *task)
 				f1=1;
 			}
 			continue;
-		}else if (timerCur->flag==TIMER_ALLOCED)//ÖØĞÂ»ñµÃ½¹µã£¬ÖØÆô¹â±ê 
+		}else if (timerCur->flag==TIMER_ALLOCED)//é‡æ–°è·å¾—ç„¦ç‚¹ï¼Œé‡å¯å…‰æ ‡ 
 		{
 			initTimer(timerCur,&bufferTime,1);
 			setTimer(timerCur,50);
 		}
 		f1=0;
 		io_cli();
-		//¼ì²éÊó±ê¼üÅÌÊÂ¼ş 
+		//æ£€æŸ¥é¼ æ ‡é”®ç›˜äº‹ä»¶ 
 		if (getBuffer(&task->bufAll.key,&data))
 		{
-			//¼üÅÌ 
+			//é”®ç›˜ 
 			io_sti();
 			flag=1;
 			switch (data)
 			{
-				case 0x0e://ÍË¸ñ¼ü 
+				case 0x0e://é€€æ ¼é”® 
 					if (curPosX>2)
 					{
 						curPosX--;
@@ -241,7 +241,7 @@ void textViewerTask_Main(struct Task *task)
 							lengthX++;
 					}
 					break;
-				case 0x1c://»Ø³µ¼ü 
+				case 0x1c://å›è½¦é”® 
 					boxfillOnSht(textViewerSheet,16+8*curPosX,28+curPosY*16,8,15,WHITE);
 					refreshSubInSheet(textViewerSheet,16+8*curPosX,28+curPosY*16,8,15); 
 					curPosY++;
@@ -260,7 +260,7 @@ void textViewerTask_Main(struct Task *task)
 					loadTextFile(task->par[0],textViewerSheet,&curPosX,&curPosY,curInput,page);
 					break;
 				default:
-					if (data<0x80 && keyboard.keyTable[data]>0 && curPosX<50)//×ÖÄ¸£¬Êı×Ö 
+					if (data<0x80 && keyboard.keyTable[data]>0 && curPosX<50)//å­—æ¯ï¼Œæ•°å­— 
 					{
 						curInput[curPosY][curPosX++] = keyboard.keyTable[data+keyboard.isShift*0x80];
 						if (curPosX>lengthX)
