@@ -16,13 +16,13 @@ void initTaskCTL()
 	{
 		taskctl->tasks0[i].flags=TASK_UNALLOCED;
 		taskctl->tasks0[i].sel=(TASK_GDT0+i)*8;
-		set_segmdesc(gdt+TASK_GDT0+i,103,(int)&taskctl->tasks0[i].tss,AR_TSS32);	//Éè¶¨¶Î 
+		set_segmdesc(gdt+TASK_GDT0+i,103,(int)&taskctl->tasks0[i].tss,AR_TSS32);	//è®¾å®šæ®µ 
 	}
 	return;
 }
 struct Task *getMainTask()
 {
-	//³õÊ¼»¯Ö÷ÈÎÎñ 
+	//åˆå§‹åŒ–ä¸»ä»»åŠ¡ 
 	struct Task *task;
 	task=allocTask();
 	task->flags=TASK_USING;
@@ -32,19 +32,19 @@ struct Task *getMainTask()
 	load_tr(task->sel);
 	taskTimer=allocTimer();
 	setTimer(taskTimer,2);
-	//·µ»Ø
+	//è¿”å›
 	return task;
 }
-//·ÖÅäÈÎÎñ 
+//åˆ†é…ä»»åŠ¡ 
 struct Task *allocTask()
 {
 	int i;
 	struct Task *task;
 	for (i=0;i<MAX_TASKS;i++)
 	{
-		if (taskctl->tasks0[i].flags==TASK_UNALLOCED)//ÕÒµ½µÚÒ»¸ö¿ÉÒÔ·ÖÅäµÄÈÎÎñ 
+		if (taskctl->tasks0[i].flags==TASK_UNALLOCED)//æ‰¾åˆ°ç¬¬ä¸€ä¸ªå¯ä»¥åˆ†é…çš„ä»»åŠ¡ 
 		{
-			//Éè¶¨ÈÎÎñµÄÊôĞÔ 
+			//è®¾å®šä»»åŠ¡çš„å±æ€§ 
 			task=&taskctl->tasks0[i];
 			task->flags=TASK_ALLOCED;
 			task->tss.eflags=0x00000202; //IF=1
@@ -70,7 +70,7 @@ void initTask(struct Task *task,int eip,char *s,int f)//,unsigned char *keyb,uns
 {
 	char str[30];
 	sprintf (str,"%s PCB",s);
-	task->tss.esp=allocMem_4k(64*1024,str)+64*1024-8;//Õ»µ×Ö¸ÕëÎªÄÚ´æµÄÄ©Î²¡¤ÎªÁËÈÃµØÖ·²»³¬¹ı·¶Î§£ºsht_backÎªesp+4µ½esp+8 
+	task->tss.esp=allocMem_4k(64*1024,str)+64*1024-8;//æ ˆåº•æŒ‡é’ˆä¸ºå†…å­˜çš„æœ«å°¾Â·ä¸ºäº†è®©åœ°å€ä¸è¶…è¿‡èŒƒå›´ï¼šsht_backä¸ºesp+4åˆ°esp+8 
 	task->tss.eip=eip;
 	task->tss.es=1*8;
 	task->tss.cs=2*8;
@@ -78,12 +78,12 @@ void initTask(struct Task *task,int eip,char *s,int f)//,unsigned char *keyb,uns
 	task->tss.ds=1*8;
 	task->tss.fs=1*8;
 	task->tss.gs=1*8;
-	*((int *)(task->tss.esp+4)) = (int)task;//Ñ¹ÈëÕ»£¬µ±×÷º¯ÊıµÄ²ÎÊı 
+	*((int *)(task->tss.esp+4)) = (int)task;//å‹å…¥æ ˆï¼Œå½“ä½œå‡½æ•°çš„å‚æ•° 
 	task->parCount=0;
-	//Éè¶¨ID 
+	//è®¾å®šID 
 	task->winID=window.winCount;
 	
-	//¼üÅÌÊó±ê»º³åÇø
+	//é”®ç›˜é¼ æ ‡ç¼“å†²åŒº
 	if (f>=10)
 	{
 		sprintf (str,"%s Communication Buffer",s);
@@ -101,7 +101,7 @@ void initTask(struct Task *task,int eip,char *s,int f)//,unsigned char *keyb,uns
 void runTask(struct Task *task)
 {
 	task->flags=TASK_USING;
-	taskctl->tasks[taskctl->runningCount]=task;//½«taskÌí¼Óµ½ÔËĞĞ¶ÓÁĞÖĞ£¬ÔËĞĞ 
+	taskctl->tasks[taskctl->runningCount]=task;//å°†taskæ·»åŠ åˆ°è¿è¡Œé˜Ÿåˆ—ä¸­ï¼Œè¿è¡Œ 
 	taskctl->runningCount++;
 }
 
@@ -122,19 +122,19 @@ void deleteTask(struct Task *task)
 	char ts=0;
 	if (task->flags==2)
 	{
-		//Èç¹ûĞèÒªÉ¾³ıÕıÔÚÔËĞĞµÄÈÎÎñ £¬ÔòĞèÒª½øĞĞÈÎÎñÇĞ»» 
+		//å¦‚æœéœ€è¦åˆ é™¤æ­£åœ¨è¿è¡Œçš„ä»»åŠ¡ ï¼Œåˆ™éœ€è¦è¿›è¡Œä»»åŠ¡åˆ‡æ¢ 
 		if (task==taskctl->tasks[taskctl->now])
 			ts=1;
 			
-		//Ñ°ÕÒĞèÒªÉ¾³ıµÄÈÎÎñ 
+		//å¯»æ‰¾éœ€è¦åˆ é™¤çš„ä»»åŠ¡ 
 		for(i=0;i<taskctl->runningCount;i++) 
 			if (task==taskctl->tasks[i])
 				break;
 				
-		//ĞŞ¸ÄÕıÔÚÔËĞĞµÄ±àºÅ
+		//ä¿®æ”¹æ­£åœ¨è¿è¡Œçš„ç¼–å·
 		if (taskctl->now>i) 
 			taskctl->now--;
-		//É¾³ıÈÎÎñ 
+		//åˆ é™¤ä»»åŠ¡ 
 		taskctl->runningCount--;
 		for (;i<taskctl->runningCount;i++)
 			taskctl->tasks[i]=taskctl->tasks[i+1];
@@ -142,7 +142,7 @@ void deleteTask(struct Task *task)
 		//taskctl->tasks[taskctl->runningCount]->flags=TASK_UNALLOCED;
 		
 		
-		//ÈÎÎñÇĞ»» 
+		//ä»»åŠ¡åˆ‡æ¢ 
 		if (ts!=0)
 		{  
 			if (taskctl->now>=taskctl->runningCount)
@@ -172,7 +172,7 @@ void deleteWindow(struct Task *task)
 {
 	int i;
 	io_cli();
-	//¹Ø±Õ´°¿Ú£¬ÇĞ»»½¹µã
+	//å…³é—­çª—å£ï¼Œåˆ‡æ¢ç„¦ç‚¹
 	window.winCount--;
 	for (i=task->winID;i<window.winCount;i++) 
 		sprintf(window.winName[i],"%s",window.winName[i+1]);

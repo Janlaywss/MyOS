@@ -16,7 +16,7 @@ struct Timer
 };
 struct TimerCTL
 {
-	unsigned int count,next;//nextΪ��һ�γ�ʱʱ�� 
+	unsigned int count,next;//next为下一次超时时间 
 	struct Timer timer[TIMER_MAX];
 }; 
 extern struct TimerCTL timerctl;

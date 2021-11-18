@@ -15,7 +15,7 @@ void showTask(struct Sheet *taskListSheet)
 	char str[70]=" ID       Name       Status";
 	putStrAndBackOnSht(taskListSheet,18,32+curPosY*30,BLACK,WHITE,str,28);
 	curPosY=1;
-	//主任务特殊化处理 
+	//涓讳换鍔＄壒娈婂寲澶勭悊 
 	sprintf (str,"  1      System      Running");
 	putStrAndBackOnSht(taskListSheet,18,32+curPosY*30,BLACK,WHITE,str,28);
 	curPosY++; 
@@ -27,10 +27,10 @@ void showTask(struct Sheet *taskListSheet)
 			j++;
 		for (k=0;k<9-j/2;k++)
 			sprintf (str,"%s ",str);
-		sprintf (str,"%s%s",str,window.winName[taskctl->tasks[i]->winID]);//winID不考虑主任务，且初始为0 
+		sprintf (str,"%s%s",str,window.winName[taskctl->tasks[i]->winID]);//winID涓嶈�冭檻涓讳换鍔★紝涓斿垵濮嬩负0 
 		for (k=0;k<9-(j+1)/2;k++)
 			sprintf (str,"%s ",str);
-		sprintf (str,"%sRunning",str);//winID不考虑主任务，且初始为0 
+		sprintf (str,"%sRunning",str);//winID涓嶈�冭檻涓讳换鍔★紝涓斿垵濮嬩负0 
 		putStrAndBackOnSht(taskListSheet,18,32+curPosY*30,BLACK,WHITE,str,28);
 		curPosY++;
 	}
@@ -38,28 +38,28 @@ void showTask(struct Sheet *taskListSheet)
 
 void taskListTask_Main(struct Task *task)
 {
-	//初始化缓冲区 
+	//鍒濆鍖栫紦鍐插尯 
 	char bufferArray[128];
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,128,bufferArray);
-	//初始化定时器 
+	//鍒濆鍖栧畾鏃跺櫒 
 	struct Timer *timerCur;
 	timerCur=allocTimer();
 	initTimer(timerCur,&bufferTime,1);
 	setTimer(timerCur,100);
 	
 	
-	//显示窗口
+	//鏄剧ず绐楀彛
 	struct Sheet *taskListSheet;
 	unsigned char *taskListBuffer;
 	taskListSheet=allocSheet();
 	slideSheet(taskListSheet,200,140);
-	taskListBuffer=(unsigned char *)allocMem(270*340,"Task List UI");//申请内存空间 
+	taskListBuffer=(unsigned char *)allocMem(270*340,"Task List UI");//鐢宠鍐呭瓨绌洪棿 
 	setBufInSheet(taskListSheet,taskListBuffer,270,340,-1);
 	makeWindow(taskListSheet,270,310,"Task List");
 	setHeightSheet(taskListSheet,task->winID+1);
 	
-	//显示信息 
+	//鏄剧ず淇℃伅 
 	showTask(taskListSheet);
 	refreshSheet(taskListSheet);
 	unsigned char data;
@@ -74,11 +74,11 @@ void taskListTask_Main(struct Task *task)
 			flag=2;
 			switch(data)
 			{
-				//左键移动 
+				//宸﹂敭绉诲姩 
 				case 0:
 					slideSheet(taskListSheet,mdec.x,mdec.y);
 					break;
-				//右键关闭
+				//鍙抽敭鍏抽棴
 				case 2:
 					freeSheet(taskListSheet);
 					freeMem((unsigned int)taskListBuffer,270*340);
@@ -87,7 +87,7 @@ void taskListTask_Main(struct Task *task)
 					break;
 			}
 		}
-		//定时刷新 
+		//瀹氭椂鍒锋柊 
 		if (getBuffer(&bufferTime,&data))
 		{
 			io_sti();
@@ -96,7 +96,7 @@ void taskListTask_Main(struct Task *task)
 			{
 			case 1:
 				initTimer(timerCur,&bufferTime,1);
-				//显示信息 
+				//鏄剧ず淇℃伅 
 				showTask(taskListSheet);
 				refreshSheet(taskListSheet);
 				setTimer(timerCur,100);

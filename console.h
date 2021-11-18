@@ -3,12 +3,12 @@
 #define MAXCOMMANDLENGTH	20
 enum CommandType
 {
-	Calculator,	//¼ÆËãÆ÷ 
-	Open,		//´ò¿ªÎÄ¼ş 
-	Play,		//²¥·ÅÒôÀÖ 
-	TaskList,	//ÈÎÎñ¹ÜÀíÆ÷ 
-	MemoryList,	//ÄÚ´æ±í 
-	Shutdown	//¹Ø»ú 
+	Calculator,	//è®¡ç®—å™¨ 
+	Open,		//æ‰“å¼€æ–‡ä»¶ 
+	Play,		//æ’­æ”¾éŸ³ä¹ 
+	TaskList,	//ä»»åŠ¡ç®¡ç†å™¨ 
+	MemoryList,	//å†…å­˜è¡¨ 
+	Shutdown	//å…³æœº 
 };
 struct Command
 {

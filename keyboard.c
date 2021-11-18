@@ -2,24 +2,24 @@
 #include"nasmfunc.h"
 #include"buffer.h"
 struct Keyboard keyboard;
-//µÈ´ı¼üÅÌ¿ØÖÆµçÂ·×¼±¸Íê±Ï
+//ç­‰å¾…é”®ç›˜æ§åˆ¶ç”µè·¯å‡†å¤‡å®Œæ¯•
 void wait_KBC_sendready()
 {
-	//¼üÅÌ¿ØÖÆµçÂ·×¼±¸Íê±ÏÊ± PORT_KEYSTAµØÖ·µÄµ¹ÊıµÚ¶şÎ»Ó¦¸ÃÊÇ0
+	//é”®ç›˜æ§åˆ¶ç”µè·¯å‡†å¤‡å®Œæ¯•æ—¶ PORT_KEYSTAåœ°å€çš„å€’æ•°ç¬¬äºŒä½åº”è¯¥æ˜¯0
 	while (1)
 		if ((io_in8(PORT_KEYSTA) & KEYSTA_SEND_NOTREADY)==0)
 			break;
 	return;
 }
-//³õÊ¼»¯¼üÅÌ¿ØÖÆµçÂ·
+//åˆå§‹åŒ–é”®ç›˜æ§åˆ¶ç”µè·¯
 void init_keyboard()
 {
-	//µÈ´ı¿ÉÒÔ·¢ËÍĞÅÏ¢
+	//ç­‰å¾…å¯ä»¥å‘é€ä¿¡æ¯
 	wait_KBC_sendready();
-	//·¢ËÍÄ£Ê½Ö¸Áî
+	//å‘é€æ¨¡å¼æŒ‡ä»¤
 	io_out8(PORT_KEYCMD,KEYCMD_WRITE_MODE);
 	wait_KBC_sendready();
-	//·¢ËÍÖ¸Áî±àºÅ
+	//å‘é€æŒ‡ä»¤ç¼–å·
 	io_out8(PORT_KEYDAT,KBC_MODE);
 }
 

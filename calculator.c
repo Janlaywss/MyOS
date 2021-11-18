@@ -15,7 +15,7 @@ void analysize(char *str,struct Exp *exp)
 	int num=0;
 	while (str[l]!='\0')
 	{
-		//´¦ÀíÊı×Ö 
+		//å¤„ç†æ•°å­— 
 		if (str[l]>='0' && str[l]<='9')
 		{
 			num*=10;
@@ -24,7 +24,7 @@ void analysize(char *str,struct Exp *exp)
 		}
 		else
 		{
-			if (isnum)//ÌáÈ¡Êı×Ö 
+			if (isnum)//æå–æ•°å­— 
 			{
 				exp->data[r]=num;
 				exp->type[r]=0;
@@ -33,9 +33,9 @@ void analysize(char *str,struct Exp *exp)
 			}
 			num=0;
 			exp->type[r]=1;
-			switch(str[l])//·ûºÅ 
+			switch(str[l])//ç¬¦å· 
 			{
-				case '-'://¸ººÅÌØÊâ´¦Àí 
+				case '-'://è´Ÿå·ç‰¹æ®Šå¤„ç† 
 					if (l==0)
 					{
 						exp->type[0]=0;
@@ -51,7 +51,7 @@ void analysize(char *str,struct Exp *exp)
 					exp->data[r]=0;
 					exp->type[r]=str[l];
 					break;
-				default://´íÎó 
+				default://é”™è¯¯ 
 					exp->type[0]=-1;
 					return;
 			}
@@ -59,7 +59,7 @@ void analysize(char *str,struct Exp *exp)
 		}
 		l++;
 	}
-	if (isnum)//ÌáÈ¡Êı×Ö 
+	if (isnum)//æå–æ•°å­— 
 	{
 		exp->data[r]=num;
 		exp->type[r]=0;
@@ -71,7 +71,7 @@ int calSub(struct Exp *exp,int h,int r)
 {
 	int i,deep=0,j;
 	int pl=0,pr=0;
-	//ÏÈÕÒÀ¨ºÅ 
+	//å…ˆæ‰¾æ‹¬å· 
 	for (i=h;i<=r;i++)
 	{
 		if (exp->type[i]=='(')
@@ -90,12 +90,12 @@ int calSub(struct Exp *exp,int h,int r)
 			{
 				pr=i;
 				int d=pr-pl-1; 
-				int  res=calSub(exp,pl+1,pr-1);//¼ÆËãÀ¨ºÅÄÚµÄ 
+				int  res=calSub(exp,pl+1,pr-1);//è®¡ç®—æ‹¬å·å†…çš„ 
 				if (exp->type[0]==-1 || exp->type[pl+2]!=')')
 				{
 					exp->type[0]=-1;
 					return 0;
-				}else //É¾³ıÀ¨ºÅ 
+				}else //åˆ é™¤æ‹¬å· 
 				{
 					exp->type[pl]=0;
 					exp->data[pl]=exp->data[pl+1];
@@ -111,7 +111,7 @@ int calSub(struct Exp *exp,int h,int r)
 			}
 		}
 	}
-	//¼ÆËã³Ë³ı 
+	//è®¡ç®—ä¹˜é™¤ 
 	for (i=h+1;i<=r-1;i++) 
 	{
 		if (exp->type[i]=='*' || exp->type[i]=='/')
@@ -122,18 +122,18 @@ int calSub(struct Exp *exp,int h,int r)
 				{
 					if (exp->data[i+1]==0)
 					{
-						//³ıÊı²»Îª0 
+						//é™¤æ•°ä¸ä¸º0 
 						exp->type[0]=-1;
 						return 0;
 					}else 
 					{
-						exp->data[i-1]=exp->data[i-1]/exp->data[i+1];//³ı·¨ 
+						exp->data[i-1]=exp->data[i-1]/exp->data[i+1];//é™¤æ³• 
 					}
 				}else 
 				{
-					exp->data[i-1]=exp->data[i-1]*exp->data[i+1];//³Ë·¨ 
+					exp->data[i-1]=exp->data[i-1]*exp->data[i+1];//ä¹˜æ³• 
 				}
-				//É¾³ıºóÁ½Ïî 
+				//åˆ é™¤åä¸¤é¡¹ 
 				for (j=i;j<exp->length-2;j++)
 				{
 					exp->data[j]=exp->data[j+2];
@@ -149,7 +149,7 @@ int calSub(struct Exp *exp,int h,int r)
 			}
 		}
 	}
-	//¼ÆËã¼Ó¼õ
+	//è®¡ç®—åŠ å‡
 	for (i=h+1;i<=r-1;i++) 
 	{
 		if (exp->type[i]=='+' || exp->type[i]=='-')
@@ -158,12 +158,12 @@ int calSub(struct Exp *exp,int h,int r)
 			{
 				if (exp->type[i]=='-')
 				{
-					exp->data[i-1]=exp->data[i-1]-exp->data[i+1];//¼õ·¨ 
+					exp->data[i-1]=exp->data[i-1]-exp->data[i+1];//å‡æ³• 
 				}else 
 				{
-					exp->data[i-1]=exp->data[i-1]+exp->data[i+1];//¼Ó·¨ 
+					exp->data[i-1]=exp->data[i-1]+exp->data[i+1];//åŠ æ³• 
 				}
-				//É¾³ıºóÁ½Ïî 
+				//åˆ é™¤åä¸¤é¡¹ 
 				for (j=i;j<exp->length-2;j++)
 				{
 					exp->data[j]=exp->data[j+2];
@@ -186,7 +186,7 @@ int calculator (char *str)
 	int i;
 	int res; 
 	struct Exp exp;
-	analysize(str,&exp);//·ÖÎö±í´ïÊ½ 
+	analysize(str,&exp);//åˆ†æè¡¨è¾¾å¼ 
 	if (exp.type[0]==-1)
 	{
 		str[0]='\0';
@@ -202,26 +202,26 @@ int calculator (char *str)
 		}else return res;
 	} 
 }
-//ÈÎÎñcalculator 
+//ä»»åŠ¡calculator 
 void calculatorTask_Main(struct Task *task)
 {
-	//³õÊ¼»¯»º³åÇø 
+	//åˆå§‹åŒ–ç¼“å†²åŒº 
 	char bufferArray[128];
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,128,bufferArray);
 	
-	//³õÊ¼»¯¶¨Ê±Æ÷ 
+	//åˆå§‹åŒ–å®šæ—¶å™¨ 
 	struct Timer *timerCur;
 	timerCur=allocTimer();
 	initTimer(timerCur,&bufferTime,1);
 	setTimer(timerCur,50);
 	
-	//³õÊ¼»¯¼ÆËãÆ÷Í¼²ã
+	//åˆå§‹åŒ–è®¡ç®—å™¨å›¾å±‚
 	struct Sheet *calculatorSheet;
 	unsigned char *calculatorBuffer;	
 	calculatorBuffer=(unsigned char *)allocMem(312*210,"Calculator UI");
 	calculatorSheet=allocSheet();
-	setBufInSheet(calculatorSheet,calculatorBuffer,312,210,-1);//Ã»ÓĞÍ¸Ã÷É«
+	setBufInSheet(calculatorSheet,calculatorBuffer,312,210,-1);//æ²¡æœ‰é€æ˜è‰²
 	slideSheet(calculatorSheet,202,8);
 	makeWindow(calculatorSheet,312,210,"Calculator");
 	makeTextBox(calculatorSheet,8,27,296,176,BLACK);
@@ -243,7 +243,7 @@ void calculatorTask_Main(struct Task *task)
 	while (1)
 	{
 		flag=0;
-		if (window.focus!=task->winID)//½¹µã²»ÔÚ£¬È¡Ïû¹â±ê 
+		if (window.focus!=task->winID)//ç„¦ç‚¹ä¸åœ¨ï¼Œå–æ¶ˆå…‰æ ‡ 
 		{
 			if (f1==0)
 			{
@@ -252,7 +252,7 @@ void calculatorTask_Main(struct Task *task)
 				f1=1;
 			}
 			continue;
-		}else if (timerCur->flag==TIMER_ALLOCED)//ÖØĞÂ»ñµÃ½¹µã£¬ÖØÆô¹â±ê 
+		}else if (timerCur->flag==TIMER_ALLOCED)//é‡æ–°è·å¾—ç„¦ç‚¹ï¼Œé‡å¯å…‰æ ‡ 
 		{
 			initTimer(timerCur,&bufferTime,1);
 			setTimer(timerCur,50);
@@ -264,7 +264,7 @@ void calculatorTask_Main(struct Task *task)
 			io_sti();
 			switch (data)
 			{
-				case 0x0e://ÍË¸ñ¼ü 
+				case 0x0e://é€€æ ¼é”® 
 					if (curPosX>2)
 					{
 						curPosX--;
@@ -282,20 +282,20 @@ void calculatorTask_Main(struct Task *task)
 					if (curPosX<length)
 						curPosX++;
 					break;
-				case 0x1c://»Ø³µ¼ü 
+				case 0x1c://å›è½¦é”® 
 					putStrAndBackOnSht(calculatorSheet,8,28+16*curPosY,WHITE,BLACK,str,37);
 					boxfillOnSht(calculatorSheet,8+8*curPosX,28+16*curPosY,8,15,BLACK);
-					curPosY++;//ÏÂÒ»ĞĞ 
-					//É¾³ı > 
+					curPosY++;//ä¸‹ä¸€è¡Œ 
+					//åˆ é™¤ > 
 					for (int i=2;i<curPosX;i++)
 						curInput[i-2]=curInput[i]; 
 					curInput[curPosX-2]='\0';
 					int res=calculator(curInput); 
-					if (curInput[0]=='\0')//±í´ïÊ½ÕıÈ·ĞÔ 
+					if (curInput[0]=='\0')//è¡¨è¾¾å¼æ­£ç¡®æ€§ 
 						sprintf (str,"Please input the correct expression.");
-					else sprintf (str,"Result is %d.",res);	//¼ÆËã½á¹û 
+					else sprintf (str,"Result is %d.",res);	//è®¡ç®—ç»“æœ 
 					putStrAndBackOnSht(calculatorSheet,8,28+16*curPosY,WHITE,BLACK,str,37);
-					//ÁíÆğÒ»ĞĞ 
+					//å¦èµ·ä¸€è¡Œ 
 					curInput[0]='>';
 					curInput[1]=' ';
 					curInput[2]='\0';
@@ -304,7 +304,7 @@ void calculatorTask_Main(struct Task *task)
 					curPosY++; 
 					break;
 				default:
-					if (data<0x80 && keyboard.keyTable[data]>0 && curPosX<=20)//×ÖÄ¸£¬Êı×Ö 
+					if (data<0x80 && keyboard.keyTable[data]>0 && curPosX<=20)//å­—æ¯ï¼Œæ•°å­— 
 					{
 						curInput[curPosX++] = keyboard.keyTable[data+keyboard.isShift*0x80];
 						if (curPosX>length)
@@ -324,11 +324,11 @@ void calculatorTask_Main(struct Task *task)
 			flag=2;
 			switch(data)
 			{
-				//×ó¼üÒÆ¶¯ 
+				//å·¦é”®ç§»åŠ¨ 
 				case 0:
 					slideSheet(calculatorSheet,mdec.x,mdec.y);
 					break;
-				//ÓÒ¼ü¹Ø±Õ
+				//å³é”®å…³é—­
 				case 2:
 					freeSheet(calculatorSheet);
 					freeMem((unsigned int)curInput,20);

@@ -9,10 +9,10 @@
 #define MAXWINDOWNAME	50
 struct TSS
 {
-	int backlink,esp0,ss0,esp1,ss1,esp2,ss2,cr3;	//ÈÎÎñÇĞ»»ÖĞµÄĞÅÏ¢ £¬ÈÎÎñÇĞ»»Ê±²»±»CPUĞ´Èë 
-	int eip,eflags,eax,ecx,edx,ebx,esp,ebp,esi,edi;	//EIP Ìø×ªµ½ÈÎÎñÊ±ÆğÊ¼µØÖ· £¨¶ÎÄÚÆ«ÒÆ£© espÎªÈÎÎñµÄÕ» 
+	int backlink,esp0,ss0,esp1,ss1,esp2,ss2,cr3;	//ä»»åŠ¡åˆ‡æ¢ä¸­çš„ä¿¡æ¯ ï¼Œä»»åŠ¡åˆ‡æ¢æ—¶ä¸è¢«CPUå†™å…¥ 
+	int eip,eflags,eax,ecx,edx,ebx,esp,ebp,esi,edi;	//EIP è·³è½¬åˆ°ä»»åŠ¡æ—¶èµ·å§‹åœ°å€ ï¼ˆæ®µå†…åç§»ï¼‰ espä¸ºä»»åŠ¡çš„æ ˆ 
 	int es,cs,ss,ds,fs,gs;
-	int ldtr,iomap;									//ÈÎÎñÇĞ»»ÖĞµÄĞÅÏ¢ £¬ÈÎÎñÇĞ»»Ê±²»±»CPUĞ´Èë
+	int ldtr,iomap;									//ä»»åŠ¡åˆ‡æ¢ä¸­çš„ä¿¡æ¯ ï¼Œä»»åŠ¡åˆ‡æ¢æ—¶ä¸è¢«CPUå†™å…¥
 };
 struct Task
 {
@@ -27,8 +27,8 @@ struct TaskCTL
 {
 	int runningCount;
 	int now;
-	struct Task *tasks[MAX_TASKS];	//¶¯Ì¬Ö¸ÏòÈÎÎñ 
-	struct Task tasks0[MAX_TASKS];	//´æ´¢ÈÎÎñ 
+	struct Task *tasks[MAX_TASKS];	//åŠ¨æ€æŒ‡å‘ä»»åŠ¡ 
+	struct Task tasks0[MAX_TASKS];	//å­˜å‚¨ä»»åŠ¡ 
 };
 struct Window
 {

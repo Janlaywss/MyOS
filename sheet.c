@@ -10,27 +10,27 @@ struct SheetControl* initSCL(struct BootInfo *binfo)
 	scl->vram=binfo->vram;
 	scl->xsize=binfo->scrnx;
 	scl->ysize=binfo->scrny;
-	scl->top=-1;//Ã»ÓĞÍ¼²ã 
+	scl->top=-1;//æ²¡æœ‰å›¾å±‚ 
 	for (i=0;i<MAXSHEET;i++)
-		scl->sheet[i].flags=SHEETFREE;//±ê¼ÇÎªÎ´Ê¹ÓÃ
+		scl->sheet[i].flags=SHEETFREE;//æ ‡è®°ä¸ºæœªä½¿ç”¨
 	return scl; 
 }
 struct Sheet *allocSheet()
 {
 	struct Sheet *sht;
 	int i;
-	//·ÖÅä¿ÕÏĞµÄÍ¼²ã 
+	//åˆ†é…ç©ºé—²çš„å›¾å±‚ 
 	for (i=0;i<MAXSHEET;i++)
 		if (scl->sheet[i].flags==SHEETFREE)
 		{
 			sht=&scl->sheet[i];
 			sht->flags=SHEETUSE;
-			sht->height=-1;//-1±íÊ¾²»ÏÔÊ¾ 
+			sht->height=-1;//-1è¡¨ç¤ºä¸æ˜¾ç¤º 
 			return sht;
 		}
 	return 0;
 }
-//ÉèÖÃÍ¼²ã 
+//è®¾ç½®å›¾å±‚ 
 void setBufInSheet(struct Sheet *sht,unsigned char *buf,int xsize,int ysize,int col_inv)
 {
 	sht->buffer=buf;
@@ -39,7 +39,7 @@ void setBufInSheet(struct Sheet *sht,unsigned char *buf,int xsize,int ysize,int 
 	sht->col_inv=col_inv;
 }
 
-//ÉèÖÃÍ¼²ã¸ß¶È
+//è®¾ç½®å›¾å±‚é«˜åº¦
 void setHeightSheet(struct Sheet *sht,int height) 
 {
 	sht->height=height;
@@ -51,20 +51,20 @@ void setHeightSheet(struct Sheet *sht,int height)
 	refreshSubSheet(sht->x0,sht->y0,sht->xsize,sht->ysize,0);
 }
 
-//»¬¶¯Í¼²ã £¨ĞŞ¸Ä¸ß¶È£© 
+//æ»‘åŠ¨å›¾å±‚ ï¼ˆä¿®æ”¹é«˜åº¦ï¼‰ 
 void updownSheet(struct Sheet *sht,int height)
 {
 	int old=sht->height,i;
-	//ĞŞÕı´íÎóÊıÖµ 
+	//ä¿®æ­£é”™è¯¯æ•°å€¼ 
 	if (height>=scl->top+1)
 		height=scl->top+1;
 	else if (height<-1)
 		height=-1;
-	//ĞŞ¸ÄÄ³Ò»Í¼²ã¸ß¶ÈÓĞ4ÖÖÇé¿ö 
+	//ä¿®æ”¹æŸä¸€å›¾å±‚é«˜åº¦æœ‰4ç§æƒ…å†µ 
 	sht->height=height;
 	if (old>height && height>=0)
 	{
-		//½µµÍÍ¼²ãÇÒÈÔÈ»ÏÔÊ¾ ,½«ÖĞ¼äÍ¼²ãÏòÉÏÌá£¬²¢ĞŞ¸ÄÍ¼²ã±íÖĞ¸ß¶È 
+		//é™ä½å›¾å±‚ä¸”ä»ç„¶æ˜¾ç¤º ,å°†ä¸­é—´å›¾å±‚å‘ä¸Šæï¼Œå¹¶ä¿®æ”¹å›¾å±‚è¡¨ä¸­é«˜åº¦ 
 		for (i=old;i>height;i--)
 		{
 			scl->sheetp[i]=scl->sheetp[i-1];
@@ -74,7 +74,7 @@ void updownSheet(struct Sheet *sht,int height)
 		refreshSubSheet(sht->x0,sht->y0,sht->xsize,sht->ysize,height+1);
 	}else if (old>height && height<0)
 	{
-		//Òş²ØÍ¼²ã,½«ÉÏÃæÍ¼²ãÏòÏÂÀ­,²¢ĞŞ¸ÄÍ¼²ã±íÖĞ¸ß¶È 
+		//éšè—å›¾å±‚,å°†ä¸Šé¢å›¾å±‚å‘ä¸‹æ‹‰,å¹¶ä¿®æ”¹å›¾å±‚è¡¨ä¸­é«˜åº¦ 
 		for (i=old;i<scl->top;i++)
 		{ 
 			scl->sheetp[i]=scl->sheetp[i+1];
@@ -84,7 +84,7 @@ void updownSheet(struct Sheet *sht,int height)
 		refreshSubSheet(sht->x0,sht->y0,sht->xsize,sht->ysize,0);
 	}else if (old <height && old>=0)
 	{
-		//Ìá¸ßÍ¼²ãÇÒÔ­Í¼²ãÊÇÏÔÊ¾×´Ì¬ ,½«ÖĞ¼äÍ¼²ãÏòÏÂÀ­£¬²¢ĞŞ¸ÄÍ¼²ã±íÖĞ¸ß¶È 
+		//æé«˜å›¾å±‚ä¸”åŸå›¾å±‚æ˜¯æ˜¾ç¤ºçŠ¶æ€ ,å°†ä¸­é—´å›¾å±‚å‘ä¸‹æ‹‰ï¼Œå¹¶ä¿®æ”¹å›¾å±‚è¡¨ä¸­é«˜åº¦ 
 		for (i=old;i<height;i++)
 		{
 			scl->sheetp[i]=scl->sheetp[i+1];
@@ -93,7 +93,7 @@ void updownSheet(struct Sheet *sht,int height)
 		scl->sheetp[height]=sht;
 	}else if (old<height && old<0)
 	{
-		//ÏÔÊ¾Òş²ØµÄÍ¼²ã ,½«ÉÏÃæÍ¼²ãÏòÉÏÌá£¬²¢ĞŞ¸ÄÍ¼²ã±íÖĞ¸ß¶È 
+		//æ˜¾ç¤ºéšè—çš„å›¾å±‚ ,å°†ä¸Šé¢å›¾å±‚å‘ä¸Šæï¼Œå¹¶ä¿®æ”¹å›¾å±‚è¡¨ä¸­é«˜åº¦ 
 		for (i=scl->top+1;i>height;i--)
 		{
 			scl->sheetp[i]=scl->sheetp[i-1];
@@ -105,38 +105,38 @@ void updownSheet(struct Sheet *sht,int height)
 		refreshSubSheet(sht->x0,sht->y0,sht->xsize,sht->ysize,height);
 	}
 }
-//ÒÆ¶¯Í¼²ã 
+//ç§»åŠ¨å›¾å±‚ 
 void slideSheet(struct Sheet* sht,int vx0,int vy0)
 {
 	int old_x0=sht->x0,old_y0=sht->y0;
 	sht->x0=vx0;
 	sht->y0=vy0;
-	if (sht->height>=0)//ÕıÔÚÏÔÊ¾ 
+	if (sht->height>=0)//æ­£åœ¨æ˜¾ç¤º 
 	{
-		//²»¿¼ÂÇÓÅ»¯Ö±½ÓË¢ĞÂÕû¸öÆÁÄ»
+		//ä¸è€ƒè™‘ä¼˜åŒ–ç›´æ¥åˆ·æ–°æ•´ä¸ªå±å¹•
 		//refreshAllSheet(scl);
-		//¿¼ÂÇÓÅ»¯ £¬Ö»Ë¢ĞÂÓĞ±ä¶¯µÄÇøÓò£¨ÒÆ¶¯Ç°Î»ÖÃÓëÒÆ¶¯ºóÎ»ÖÃ£© 
-		//Ô­Î»ÖÃĞèÒªÈ«²¿ÖØĞÂ»æÖÆ 
+		//è€ƒè™‘ä¼˜åŒ– ï¼Œåªåˆ·æ–°æœ‰å˜åŠ¨çš„åŒºåŸŸï¼ˆç§»åŠ¨å‰ä½ç½®ä¸ç§»åŠ¨åä½ç½®ï¼‰ 
+		//åŸä½ç½®éœ€è¦å…¨éƒ¨é‡æ–°ç»˜åˆ¶ 
 		refreshSubSheet(old_x0,old_y0,sht->xsize,sht->ysize,0);
-		//ĞÂÎ»ÖÃÖ»ÓÃ´ÓÄ¿±êÍ¼²ã¿ªÊ¼»æÖÆ 
+		//æ–°ä½ç½®åªç”¨ä»ç›®æ ‡å›¾å±‚å¼€å§‹ç»˜åˆ¶ 
 		refreshSubSheet(vx0,vy0,sht->xsize,sht->ysize,sht->height);
 	}
 	return;
 }
-//ÊÍ·ÅÍ¼²ã 
+//é‡Šæ”¾å›¾å±‚ 
 void freeSheet(struct Sheet* sht)
 {
-	//Òş²Ø¸ÃÍ¼²ã²¢ÖÃÎ´Ê¹ÓÃ±êÖ¾
+	//éšè—è¯¥å›¾å±‚å¹¶ç½®æœªä½¿ç”¨æ ‡å¿—
 	if (sht->height>=0) 
 		updownSheet(sht,-1);
 	//setHeightSheet(sht,-1);
 	sht->flags=0;
 	return;
 }
-//Ë¢ĞÂÒ»²¿·ÖÆÁÄ» (x0,y0)ÊÇÏà¶ÔÆÁÄ»×ø±ê 
+//åˆ·æ–°ä¸€éƒ¨åˆ†å±å¹• (x0,y0)æ˜¯ç›¸å¯¹å±å¹•åæ ‡ 
 void refreshSubSheet(int x0,int y0,int pxsize,int pysize,int h0)
 {
-	int h,vx,vy,sx,sy;//(vx,vy) ±íÊ¾Õû¸ö»­ÃæÖĞµÄ×ø±ê (sx,sy)±íÊ¾Í¼²ãÖĞµÄ×ø±ê
+	int h,vx,vy,sx,sy;//(vx,vy) è¡¨ç¤ºæ•´ä¸ªç”»é¢ä¸­çš„åæ ‡ (sx,sy)è¡¨ç¤ºå›¾å±‚ä¸­çš„åæ ‡
 	int vx0,vx1,vy0,vy1;
 	unsigned char *buf,c,*vram=scl->vram;
 	struct Sheet *sht;
@@ -148,13 +148,13 @@ void refreshSubSheet(int x0,int y0,int pxsize,int pysize,int h0)
 		y0=0;
 	if (y0+pysize>scl->ysize)
 		pysize=scl->ysize-y0;
-	//´ÓµÍµ½¸ß»æÖÆÍ¼²ã 
+	//ä»ä½åˆ°é«˜ç»˜åˆ¶å›¾å±‚ 
 	for (h=h0;h<=scl->top;h++)
 	{
 		sht=scl->sheetp[h];
 		buf=sht->buffer;
 		/*
-		vx0~vx1,vy0~vy1	¸ÃÍ¼²ãÓë»æÖÆÇøÓòµÄ½»¼¯  
+		vx0~vx1,vy0~vy1	è¯¥å›¾å±‚ä¸ç»˜åˆ¶åŒºåŸŸçš„äº¤é›†  
 		*/
 		vy0=y0>sht->y0?y0:sht->y0;
 		vy1=y0+pysize<sht->y0+sht->ysize?y0+pysize:sht->y0+sht->ysize;
@@ -166,13 +166,13 @@ void refreshSubSheet(int x0,int y0,int pxsize,int pysize,int h0)
 				sy=vy-sht->y0;
 				sx=vx-sht->x0;
 				c=buf[sy*sht->xsize+sx];
-				//¸ÃÏñËØ²»ÊÇÍ¸Ã÷ 
+				//è¯¥åƒç´ ä¸æ˜¯é€æ˜ 
 				if (c!=sht->col_inv)
 					vram[vy*scl->xsize+vx]=c;
 			}
 	}
 	
-	//Êó±êÍ¼²ã 
+	//é¼ æ ‡å›¾å±‚ 
 	sht=&scl->sheet[1];
 	buf=sht->buffer;
 	vy0=y0>sht->y0?y0:sht->y0;
@@ -185,19 +185,19 @@ void refreshSubSheet(int x0,int y0,int pxsize,int pysize,int h0)
 			sy=vy-sht->y0;
 			sx=vx-sht->x0;
 			c=buf[sy*sht->xsize+sx];
-			//¸ÃÏñËØ²»ÊÇÍ¸Ã÷ 
+			//è¯¥åƒç´ ä¸æ˜¯é€æ˜ 
 			if (c!=sht->col_inv)
 				vram[vy*scl->xsize+vx]=c;
 		}
 }
-//»æË¢ĞÂÕû¸öÆÁÄ» 
+//ç»˜åˆ·æ–°æ•´ä¸ªå±å¹• 
 void refreshAllSheet()
 {
-	int h,sx,sy,vx,vy;//(sx,sy)±íÊ¾µ¥¸öÍ¼²ãÖĞµÄ×ø±ê (vx,vy) ±íÊ¾Õû¸ö»­ÃæÖĞµÄ×ø±ê 
+	int h,sx,sy,vx,vy;//(sx,sy)è¡¨ç¤ºå•ä¸ªå›¾å±‚ä¸­çš„åæ ‡ (vx,vy) è¡¨ç¤ºæ•´ä¸ªç”»é¢ä¸­çš„åæ ‡ 
 	unsigned char *buf,c,*vram=scl->vram;
 	struct Sheet *sht;
 	
-	//´ÓµÍµ½¸ß»æÖÆÍ¼²ã 
+	//ä»ä½åˆ°é«˜ç»˜åˆ¶å›¾å±‚ 
 	for (h=0;h<=scl->top;h++)
 	{
 		sht=scl->sheetp[h];
@@ -209,14 +209,14 @@ void refreshAllSheet()
 			{
 				vx=sht->x0+sx;
 				c=buf[sy*sht->xsize+sx];
-				//¸ÃÏñËØ²»ÊÇÍ¸Ã÷ 
+				//è¯¥åƒç´ ä¸æ˜¯é€æ˜ 
 				if (c!=sht->col_inv)
 					vram[vy*scl->xsize+vx]=c;
 			}
 		}
 	}
 	
-	//Êó±êÍ¼²ã 
+	//é¼ æ ‡å›¾å±‚ 
 	sht=&scl->sheet[1];
 	buf=sht->buffer;
 	for (sy=0;sy<sht->ysize;sy++)
@@ -226,23 +226,23 @@ void refreshAllSheet()
 		{
 			vx=sht->x0+sx;
 			c=buf[sy*sht->xsize+sx];
-			//¸ÃÏñËØ²»ÊÇÍ¸Ã÷ 
+			//è¯¥åƒç´ ä¸æ˜¯é€æ˜ 
 			if (c!=sht->col_inv)
 				vram[vy*scl->xsize+vx]=c;
 		}
 	}
 }
-//Ë¢ĞÂÒ»¸öÍ¼²ã
+//åˆ·æ–°ä¸€ä¸ªå›¾å±‚
 void refreshSheet(struct Sheet *sht) 
 {
-	//Èç¹ûÍ¼²ãÔÚÏÔÊ¾£¬ÔòË¢ĞÂÍ¼²ãËùÔÚÇøÓò 
+	//å¦‚æœå›¾å±‚åœ¨æ˜¾ç¤ºï¼Œåˆ™åˆ·æ–°å›¾å±‚æ‰€åœ¨åŒºåŸŸ 
 	if (sht->height>=0)
 		refreshSubSheet(sht->x0,sht->y0,sht->xsize,sht->ysize,sht->height);
 }
-//Ë¢ĞÂÒ»¸öÍ¼²ãµÄÒ»²¿·Ö£¨Ïà¶ÔÍ¼²ãµÄÎ»ÖÃ£© 
+//åˆ·æ–°ä¸€ä¸ªå›¾å±‚çš„ä¸€éƒ¨åˆ†ï¼ˆç›¸å¯¹å›¾å±‚çš„ä½ç½®ï¼‰ 
 void refreshSubInSheet(struct Sheet *sht,int x0,int y0,int xsize,int ysize) 
 {
-	//Èç¹ûÍ¼²ãÔÚÏÔÊ¾£¬ÔòË¢ĞÂÍ¼²ãËùÔÚÇøÓòµÄÒ»²¿·Ö 
+	//å¦‚æœå›¾å±‚åœ¨æ˜¾ç¤ºï¼Œåˆ™åˆ·æ–°å›¾å±‚æ‰€åœ¨åŒºåŸŸçš„ä¸€éƒ¨åˆ† 
 	if (sht->height>=0)
 		refreshSubSheet(sht->x0+x0,sht->y0+y0,xsize,ysize,sht->height);	
 }

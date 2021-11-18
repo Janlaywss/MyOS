@@ -2,41 +2,41 @@
 #include"nasmfunc.h"
 #include<stdio.h>
 /*
-ÄÚ´æµÄ¹ÜÀíÊ¹ÓÃ¿ÕÏĞ±í·¨
-Ê¹ÓÃÄÚ´æÇ°ÏÈ¼ì²éÄÚ´æ 
+å†…å­˜çš„ç®¡ç†ä½¿ç”¨ç©ºé—²è¡¨æ³•
+ä½¿ç”¨å†…å­˜å‰å…ˆæ£€æŸ¥å†…å­˜ 
 */ 
 struct MemoryList *meml;
 unsigned int memtest(unsigned int start,unsigned int end)
 {
 	/*
-	¼ì²éÄÚ´æµÄ·½·¨£ºÏòÄÚ´æĞ´ÈëÖµ£¬ÔÙ¶ÁÈ¡
-	¼ì²éÇ°Ğè¹Ø±Õ»º´æ£¨CPU486ÒÔÉÏ²ÅÓĞ£©£¬ÒòÎªÓĞ»º´æµÄÇé¿öÏÂÓÅÏÈ´Ó»º´æ¶ÁĞ´
-	ÏÈÅĞ¶ÏÊÇ·ñÎª486ÒÔÉÏµÄCPU
-	486ÒÔÏÂEFLAGSµÚ18Î»ÓÀÔ¶ÊÇ0£¬¹ÊÏÈĞ´Èë1ÔÚ¶ÁÈ¡¿´ÊÇ·ñÎª1*/
+	æ£€æŸ¥å†…å­˜çš„æ–¹æ³•ï¼šå‘å†…å­˜å†™å…¥å€¼ï¼Œå†è¯»å–
+	æ£€æŸ¥å‰éœ€å…³é—­ç¼“å­˜ï¼ˆCPU486ä»¥ä¸Šæ‰æœ‰ï¼‰ï¼Œå› ä¸ºæœ‰ç¼“å­˜çš„æƒ…å†µä¸‹ä¼˜å…ˆä»ç¼“å­˜è¯»å†™
+	å…ˆåˆ¤æ–­æ˜¯å¦ä¸º486ä»¥ä¸Šçš„CPU
+	486ä»¥ä¸‹EFLAGSç¬¬18ä½æ°¸è¿œæ˜¯0ï¼Œæ•…å…ˆå†™å…¥1åœ¨è¯»å–çœ‹æ˜¯å¦ä¸º1*/
 	
 	char flg486=0;
 	unsigned int eflg,cr0,i;
 	eflg=io_load_eflags();
-	eflg|=EFLAGS_AC_BIT;//½«µÚ18Î»Ğ´Èë1
+	eflg|=EFLAGS_AC_BIT;//å°†ç¬¬18ä½å†™å…¥1
 	io_store_eflags(eflg);
 	eflg=io_load_eflags();
-	flg486=((eflg & EFLAGS_AC_BIT)!=0);//ÅĞ¶ÏÊÇ·ñ»Ö¸´Îª0
-	eflg&=~EFLAGS_AC_BIT;//»Ö¸´EFLAGS
+	flg486=((eflg & EFLAGS_AC_BIT)!=0);//åˆ¤æ–­æ˜¯å¦æ¢å¤ä¸º0
+	eflg&=~EFLAGS_AC_BIT;//æ¢å¤EFLAGS
 	io_store_eflags(eflg);
 	
 	if (flg486)
 	{
 		cr0=load_cr0();
-		cr0|=CR0_CACHE_DISABLE;//½ûÖ¹»º´æ
+		cr0|=CR0_CACHE_DISABLE;//ç¦æ­¢ç¼“å­˜
 		store_cr0(cr0);
 	}
 	
-	i=memtestSub(start,end);//ÄÚ´æ¼ì²é
+	i=memtestSub(start,end);//å†…å­˜æ£€æŸ¥
 
 	if (flg486)
 	{
 		cr0=load_cr0();
-		cr0&=~CR0_CACHE_DISABLE;//ÔÊĞí»º´æ
+		cr0&=~CR0_CACHE_DISABLE;//å…è®¸ç¼“å­˜
 		store_cr0(cr0);
 	}
 	meml->maxsize=i;
@@ -48,15 +48,15 @@ unsigned int memtestSub(unsigned int start,unsigned int end)
 	unsigned int i,*p,old,pat0=0xaa55aa55,pat1=0x55aa55aa;
 	for (i=start;i<=end;i+=0x2000)
 	{
-		p=(unsigned int *)i+0xffc;//Ö»ÓÃ¼ì²é×îºóµÄ4¸ö×Ö½Ú¼´¿É
-		//¶ÔÃ¿¸öµ¥Ôª¸ñµÄ²âÊÔ·½·¨£ºĞ´Èë->·´×ª->ÅĞ¶Ï->ÔÙ·´×ª->ÅĞ¶Ï->»Ö¸´
+		p=(unsigned int *)i+0xffc;//åªç”¨æ£€æŸ¥æœ€åçš„4ä¸ªå­—èŠ‚å³å¯
+		//å¯¹æ¯ä¸ªå•å…ƒæ ¼çš„æµ‹è¯•æ–¹æ³•ï¼šå†™å…¥->åè½¬->åˆ¤æ–­->å†åè½¬->åˆ¤æ–­->æ¢å¤
 		old=*p;
-		*p=pat0;//Ğ´Èë 
-		*p^=0xffffffff;//·´×ª
-		if (*p!=pat1)//ÅĞ¶Ï
+		*p=pat0;//å†™å…¥ 
+		*p^=0xffffffff;//åè½¬
+		if (*p!=pat1)//åˆ¤æ–­
 			return i;
 			
-		*p^=0xffffffff;//ÔÙ·´×ª
+		*p^=0xffffffff;//å†åè½¬
 		if (*p!=pat0)
 			return i;
 		*p=old;
@@ -81,7 +81,7 @@ unsigned int freeTotalMem()
 		t+=meml->free[i].size;
 	return t;
 }
-//·ÖÅä¿Õ¼ä 
+//åˆ†é…ç©ºé—´ 
 unsigned int allocMem(unsigned int size,char *status)
 {
 	
@@ -93,13 +93,13 @@ unsigned int allocMem(unsigned int size,char *status)
 			a=meml->free[i].addr;
 			meml->free[i].size-=size;
 			meml->free[i].addr+=size;
-			//É¾³ı±íÏî 
+			//åˆ é™¤è¡¨é¡¹ 
 			if (meml->free[i].size==0)
 			{
 				for (j=i;j<meml->freesize;j++)
 					meml->free[j]=meml->free[j+1];
 			}
-			//Ôö¼ÓÊ¹ÓÃ¼ÇÂ¼
+			//å¢åŠ ä½¿ç”¨è®°å½•
 			for (int j=0;j<MEMORYLISTFREES;j++) 
 				if (meml->used[j].flag==0)
 				{
@@ -116,34 +116,34 @@ unsigned int allocMem(unsigned int size,char *status)
 int freeMem(unsigned int addr,unsigned int size)
 {
 	int i,j;
-	//»ñÈ¡´ı²åÈëÎ»ÖÃ 
+	//è·å–å¾…æ’å…¥ä½ç½® 
 	for (i=0;i<meml->freesize;i++)
 		if (meml->free[i].addr>addr)
 			break;
-	//ÓëÇ°±íÏî¿ÉÒÔºÏ²¢ 
+	//ä¸å‰è¡¨é¡¹å¯ä»¥åˆå¹¶ 
 	if (i>0 && meml->free[i-1].addr+meml->free[i-1].size==addr)
 	{
 		meml->free[i-1].size+=size;
-		//Óëºó±íÏîÒ²¿ÉÒÔºÏ²¢ 
+		//ä¸åè¡¨é¡¹ä¹Ÿå¯ä»¥åˆå¹¶ 
 		if (i<meml->freesize && meml->free[i].addr==addr+size)
 		{
 			meml->free[i-1].size+=meml->free[i].size;
-			//É¾³ıºó±íÏî
+			//åˆ é™¤åè¡¨é¡¹
 			meml->freesize--;
 			for (j=i;j<meml->maxfreesize;j++) 
 				meml->free[j]=meml->free[j+1];
 		}
 	}
-	//½öÓëºó±íÏî¿ÉÒÔºÏ²¢ 
+	//ä»…ä¸åè¡¨é¡¹å¯ä»¥åˆå¹¶ 
 	else if (i<meml->freesize && meml->free[i].addr==addr+size)
 	{
 		meml->free[i].addr=addr; 
 		meml->free[i].size=addr;
 	}
-	//²»¿ÉºÏ²¢
+	//ä¸å¯åˆå¹¶
 	else 
 	{
-		if (meml->freesize>=MEMORYLISTFREES-1)//³¬¹ı±íÏîµÄ×î´óÖµ 
+		if (meml->freesize>=MEMORYLISTFREES-1)//è¶…è¿‡è¡¨é¡¹çš„æœ€å¤§å€¼ 
 			return -1;
 		for (j=i;j<meml->freesize;j++) 
 			meml->free[j+1]=meml->free[j];
@@ -153,13 +153,13 @@ int freeMem(unsigned int addr,unsigned int size)
 			meml->maxfreesize=meml->free[i].size;
 		meml->freesize++; 
 	}
-	//É¾³ı¼ÇÂ¼ 
+	//åˆ é™¤è®°å½• 
 	for (i=0;i<MEMORYLISTFREES;i++)
 		if (meml->used[i].addr==addr)
 			meml->used[i].flag=0;
 	return 0;
 }
-//Ò»´ÎÉêÇë4KB
+//ä¸€æ¬¡ç”³è¯·4KB
 unsigned int allocMem_4k(unsigned int size,char *status)
 {
 	unsigned int a;
@@ -167,7 +167,7 @@ unsigned int allocMem_4k(unsigned int size,char *status)
 	a=allocMem(size,status);
 	return a;
 }
-//Ò»´ÎÊÍ·Å4KB
+//ä¸€æ¬¡é‡Šæ”¾4KB
 int freeMem_4k(unsigned int addr,unsigned int size)
 {
 	unsigned int a;

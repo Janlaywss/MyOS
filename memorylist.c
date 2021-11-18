@@ -28,28 +28,28 @@ void showMemory(struct Sheet *memoryListSheet)
 
 void memoryListTask_Main(struct Task *task)
 {
-	//初始化缓冲区 
+	//鍒濆鍖栫紦鍐插尯 
 	char bufferArray[128];
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,128,bufferArray);
-	//初始化定时器 
+	//鍒濆鍖栧畾鏃跺櫒 
 	struct Timer *timerCur;
 	timerCur=allocTimer();
 	initTimer(timerCur,&bufferTime,1);
 	setTimer(timerCur,100);
 	
 	
-	//显示窗口
+	//鏄剧ず绐楀彛
 	struct Sheet *memoryListSheet;
 	unsigned char *memoryListBuffer;
 	memoryListSheet=allocSheet();
 	slideSheet(memoryListSheet,400,20);
-	memoryListBuffer=(unsigned char *)allocMem(470*710,"Memory List UI");//申请内存空间 
+	memoryListBuffer=(unsigned char *)allocMem(470*710,"Memory List UI");//鐢宠鍐呭瓨绌洪棿 
 	setBufInSheet(memoryListSheet,memoryListBuffer,470,710,-1);
 	makeWindow(memoryListSheet,470,710,"Memory List");
 	setHeightSheet(memoryListSheet,task->winID+1);
 	
-	//显示信息 
+	//鏄剧ず淇℃伅 
 	showMemory(memoryListSheet);
 	refreshSheet(memoryListSheet);
 	unsigned char data;
@@ -64,11 +64,11 @@ void memoryListTask_Main(struct Task *task)
 			flag=2;
 			switch(data)
 			{
-				//左键移动 
+				//宸﹂敭绉诲姩 
 				case 0:
 					slideSheet(memoryListSheet,mdec.x,mdec.y);
 					break;
-				//右键关闭
+				//鍙抽敭鍏抽棴
 				case 2:
 					freeSheet(memoryListSheet);
 					freeMem((unsigned int)memoryListBuffer,470*710);
@@ -77,7 +77,7 @@ void memoryListTask_Main(struct Task *task)
 					break;
 			}
 		}
-		//定时刷新 
+		//瀹氭椂鍒锋柊 
 		if (getBuffer(&bufferTime,&data))
 		{
 			io_sti();
@@ -86,7 +86,7 @@ void memoryListTask_Main(struct Task *task)
 			{
 			case 1:
 				initTimer(timerCur,&bufferTime,1);
-				//显示信息 
+				//鏄剧ず淇℃伅 
 				showMemory(memoryListSheet);
 				refreshSheet(memoryListSheet);
 				setTimer(timerCur,100);

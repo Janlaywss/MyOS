@@ -5,16 +5,16 @@
 
 struct Sheet
 {
-	unsigned char *buffer;//ÏñËØ
-	int x0,y0,xsize,ysize;//ÆğÊ¼×ø±ê£¬³¤¿í
-	int col_inv,height,flags; //Í¸Ã÷É«É«ºÅ¡¢Í¼²ã¸ß¶È¡¢ÆäËûĞÅÏ¢ 
+	unsigned char *buffer;//åƒç´ 
+	int x0,y0,xsize,ysize;//èµ·å§‹åæ ‡ï¼Œé•¿å®½
+	int col_inv,height,flags; //é€æ˜è‰²è‰²å·ã€å›¾å±‚é«˜åº¦ã€å…¶ä»–ä¿¡æ¯ 
 };
 struct SheetControl
 {
 	unsigned char *vram;
-	int xsize,ysize,top;//top±íÊ¾×îÉÏ²ãÍ¼²ãµÄ¸ß¶È 
-	struct Sheet *sheetp[MAXSHEET];//Í¼²ãµÄµØÖ·£¬·½±ã½øĞĞÅÅĞò 
-	struct Sheet sheet[MAXSHEET];//¾ßÌåÍ¼²ã 
+	int xsize,ysize,top;//topè¡¨ç¤ºæœ€ä¸Šå±‚å›¾å±‚çš„é«˜åº¦ 
+	struct Sheet *sheetp[MAXSHEET];//å›¾å±‚çš„åœ°å€ï¼Œæ–¹ä¾¿è¿›è¡Œæ’åº 
+	struct Sheet sheet[MAXSHEET];//å…·ä½“å›¾å±‚ 
 };
 extern struct SheetControl *scl;
 /*extern struct BootInfo *binfo;
