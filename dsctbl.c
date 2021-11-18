@@ -11,15 +11,15 @@ void init_gdtidt(void)
 	
 	set_segmdesc(gdt+1,0xffffffff,0x00000000,AR_DATA32_RW);
 	set_segmdesc(gdt+2,LIMIT_BOTPAK, ADR_BOTPAK, AR_CODE32_ER);
-	//��GDTRд��Ĵ���������¼��ȫ�ֶα��Ļ�ַ�ͽ��� 
+	//将GDTR写入寄存器，他记录了全局段表的基址和界限 
 	load_gdtr(LIMIT_GDT, ADR_GDT);
 	
 	for (i=0;i<256;i++)
 		set_gatedesc(idt+i,0,0,0);
 	load_idtr(LIMIT_IDT, ADR_IDT);
 	
-	//21���жϣ��жϴ��������ڵڶ����ε�nsm_inthandler21��
-	//�ڶ�������ȫ�� 
+	//21号中断，中断处理程序在第二个段的nsm_inthandler21中
+	//第二个段是全局 
 	set_gatedesc(idt+0x20,(int)nsm_inthandler20,2<<3,AR_INTGATE32);
 	set_gatedesc(idt+0x21,(int)nsm_inthandler21,2<<3,AR_INTGATE32);
 	set_gatedesc(idt+0x27,(int)nsm_inthandler27,2<<3,AR_INTGATE32);
@@ -36,9 +36,9 @@ void set_segmdesc(struct Segment_Descriptor *sd,unsigned int limit,int base,int 
 	sd->limit_low=limit & 0xffff;
 	sd->base_low=base & 0xffff;
 	sd->base_mid=(base >> 16) & 0xff;
-	//ar��ʽΪxxxx0000xxxxxxxx�����и�4λд��limit_high�У���8λд��access_right�� 
+	//ar格式为xxxx0000xxxxxxxx，其中高4位写入limit_high中，低8位写入access_right中 
 	sd->access_right=ar & 0xff; 
-	//limit_high��4λ�ǿ�����Ϣ����4λ��limit_low��ɶ����� 
+	//limit_high高4位是控制信息，低4位与limit_low组成段上限 
 	sd->limit_high=((limit>>16)& 0x0f) |((ar>>8) & 0xf0);
 	sd->base_high=(base>>24)& 0xff;
 	return;

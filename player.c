@@ -14,12 +14,12 @@
 void playOneBeat(int eax)
 {
 	int i=0;
-	//停止播放 
+	//鍋滄鎾斁 
 	if (eax==0)
 	{
 		i=io_in8(0x61);
 		io_out8(0x61,i&0x0d);
-	}else//播放 
+	}else//鎾斁 
 	{
 		i=1193180000/eax;
 		io_out8(0x43,0xb6);
@@ -34,12 +34,12 @@ void loadMusicFile(char *fileName,struct Task *task,struct Sheet *musicPlayerShe
 	int tone[12] = {1071618315,1135340056,1202850889,1274376125,1350154473,1430438836,
 		1515497155,1605613306,1701088041,1802240000,1909406767,2022946002}; 
 	int note[7] = {9,11,0,2,4,5,7};
-	//初始化缓冲区 
+	//鍒濆鍖栫紦鍐插尯 
 	char bufferArray;
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,1,&bufferArray);
 
-	//初始化定时器 
+	//鍒濆鍖栧畾鏃跺櫒 
 	struct Timer *timerPlayer;
 	timerPlayer=allocTimer();
 	initTimer(timerPlayer,&bufferTime,1);
@@ -97,17 +97,17 @@ void loadMusicFile(char *fileName,struct Task *task,struct Sheet *musicPlayerShe
 }
 void playTask_Main(struct Task *task)
 {
-	//初始化缓冲区 
+	//鍒濆鍖栫紦鍐插尯 
 	char bufferArray[128];
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,128,bufferArray);
 	
-	//显示窗口
+	//鏄剧ず绐楀彛
 	struct Sheet *musicPlayerSheet;
 	unsigned char *musicPlayerBuffer;
 	musicPlayerSheet=allocSheet();
 	slideSheet(musicPlayerSheet,500,120);
-	musicPlayerBuffer=(unsigned char *)allocMem(200*68,"Player UI");//申请内存空间 
+	musicPlayerBuffer=(unsigned char *)allocMem(200*68,"Player UI");//鐢宠鍐呭瓨绌洪棿 
 	setBufInSheet(musicPlayerSheet,musicPlayerBuffer,200,68,-1);
 	makeWindow(musicPlayerSheet,200,68,"Player");
 	setHeightSheet(musicPlayerSheet,task->winID+1);
@@ -125,11 +125,11 @@ void playTask_Main(struct Task *task)
 			flag=2;
 			switch(data)
 			{
-				//左键移动 
+				//宸﹂敭绉诲姩 
 				case 0:
 					slideSheet(musicPlayerSheet,mdec.x,mdec.y);
 					break;
-				//右键关闭
+				//鍙抽敭鍏抽棴
 				case 2:
 					freeSheet(musicPlayerSheet);
 					freeMem((unsigned int)musicPlayerBuffer,200*68);

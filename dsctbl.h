@@ -10,25 +10,25 @@
 #define AR_CODE32_ER	0x409a
 #define AR_INTGATE32	0x008e
 
-//È«¾ÖÃèÊö·û±í 
+//å…¨å±€æè¿°ç¬¦è¡¨ 
 struct Segment_Descriptor
 {
 	/*
-	base ¶Î»ùÖ·£¨¿¼ÂÇ¼æÈİĞÔ£¬·Ö³ÉÁËÈı¶Î£© 
-	limit ¶ÎÉÏÏŞ×Ü20Î»£¨limit_lowÓëlimit_highµÍ4Î»£©£¬limitµ¥Î»ÊÇÒ³£¬1Ò³Îª4KB£¬¹²×Ü¿É±íÊ¾4KB*1M= 4GB
-	¶ÎÊôĞÔ12Î»£¨access_rightÓëlimit_high¸ß4Î»£© 
+	base æ®µåŸºå€ï¼ˆè€ƒè™‘å…¼å®¹æ€§ï¼Œåˆ†æˆäº†ä¸‰æ®µï¼‰ 
+	limit æ®µä¸Šé™æ€»20ä½ï¼ˆlimit_lowä¸limit_highä½4ä½ï¼‰ï¼Œlimitå•ä½æ˜¯é¡µï¼Œ1é¡µä¸º4KBï¼Œå…±æ€»å¯è¡¨ç¤º4KB*1M= 4GB
+	æ®µå±æ€§12ä½ï¼ˆaccess_rightä¸limit_highé«˜4ä½ï¼‰ 
 	*/
 	short limit_low,base_low;
 	char base_mid,access_right;
 	char limit_high,base_high;
 };
-//ÖĞ¶Ï¼ÇÂ¼±í 
+//ä¸­æ–­è®°å½•è¡¨ 
 struct Gate_Descriptor
 {
 	/*
-	offset Æ«ÒÆ
-	selector Ñ¡Ôñ·û
-	·¢ÉúÖĞ¶Ïºó ´¦Àí³ÌĞòËùÔÚÎ»ÖÃ£ºÑ¡Ôñ·ûÈ·¶¨¶Î£¬Æ«ÒÆÈ·¶¨¾ßÌåÎ»ÖÃ
+	offset åç§»
+	selector é€‰æ‹©ç¬¦
+	å‘ç”Ÿä¸­æ–­å å¤„ç†ç¨‹åºæ‰€åœ¨ä½ç½®ï¼šé€‰æ‹©ç¬¦ç¡®å®šæ®µï¼Œåç§»ç¡®å®šå…·ä½“ä½ç½®
 	*/
 	 
 	short offset_low,selector;

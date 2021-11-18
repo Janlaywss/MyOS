@@ -21,22 +21,22 @@ void loadImageFile (char *fileName,struct Sheet *imageViewerSheet)
 }
 void imageViewerTask_Main(struct Task *task)
 { 
-	//³õÊ¼»¯»º³åÇø 
+	//åˆå§‹åŒ–ç¼“å†²åŒº 
 	char bufferArray[128];
 	struct Buffer bufferTime;
 	initBuffer(&bufferTime,128,bufferArray);
 	
-	//ÏÔÊ¾´°¿Ú
+	//æ˜¾ç¤ºçª—å£
 	struct Sheet *imageViewerSheet;
 	unsigned char *imageViewerBuffer;
 	imageViewerSheet=allocSheet();
 	slideSheet(imageViewerSheet,500,120);
-	imageViewerBuffer=(unsigned char *)allocMem(300*240,"Image Viewer UI");//ÉêÇëÄÚ´æ¿Õ¼ä 
+	imageViewerBuffer=(unsigned char *)allocMem(300*240,"Image Viewer UI");//ç”³è¯·å†…å­˜ç©ºé—´ 
 	setBufInSheet(imageViewerSheet,imageViewerBuffer,300,240,-1);
 	makeWindow(imageViewerSheet,300,240,"Image Viewer");
 	setHeightSheet(imageViewerSheet,task->winID+1);
 	
-	//ÏÔÊ¾ĞÅÏ¢ 
+	//æ˜¾ç¤ºä¿¡æ¯ 
 	refreshSheet(imageViewerSheet);
 	unsigned char data;
 	int flag=0;
@@ -51,11 +51,11 @@ void imageViewerTask_Main(struct Task *task)
 			flag=2;
 			switch(data)
 			{
-				//×ó¼üÒÆ¶¯ 
+				//å·¦é”®ç§»åŠ¨ 
 				case 0:
 					slideSheet(imageViewerSheet,mdec.x,mdec.y);
 					break;
-				//ÓÒ¼ü¹Ø±Õ
+				//å³é”®å…³é—­
 				case 2:
 					freeSheet(imageViewerSheet);
 					freeMem((unsigned int)imageViewerBuffer,300*240);
